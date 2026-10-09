@@ -12,6 +12,7 @@ Build a mobile-first PWA that helps students:
 4. Track micro-savings goals (tracker only, no custody)
 5. Learn via short lessons + virtual simulator (hypothetical only)
 6. Use it in English, Yoruba, Nigerian Pidgin, Igbo, Hausa
+7. Record physical cash income/expenses with a separate "Cash on hand" balance + reconcile count (tracking only)
 
 ## 2. Non-Goals for MVP (Explicitly Postponed)
 - No bank integration / open banking / auto-sync
@@ -19,6 +20,8 @@ Build a mobile-first PWA that helps students:
 - No real investments, live prices, trading
 - No complex AI coach, wellness score, marketplace, rewards with liability
 - No native iOS/Android apps (PWA only)
+
+Cash scope note: physical cash is tracking only. SBMS does not hold, send, or receive real money. Users type amounts; the app records and plans around them.
 
 ## 3. Recommended Stack (default - confirm before build)
 - **Client:** React + Vite + TypeScript, PWA (vite-plugin-pwa), React Router, Tailwind or CSS Modules
@@ -49,7 +52,10 @@ Rules:
 
 ## 5. Data Model (MVP)
 - `profiles(user_id PK, language, currency='NGN', settings JSONB)`
-- `transactions(id, user_id FK, type: income|expense, amount NUMERIC>0, category TEXT, date DATE, note TEXT?)`
+- `transactions(id, user_id FK, type: income|expense, amount NUMERIC>0, category TEXT, date DATE, note TEXT?, payment_method: cash|bank|mobile|other DEFAULT other, source TEXT?)`
+- `cash_sources(id, user_id FK, name TEXT UNIQUE per user)` - custom quick-reuse sources (e.g. "Mum", "Dad"); seeds: Parent, Allowance, Part-time work, Gift, Other
+- `transaction_allocations(id, transaction_id FK, budget_id FK NULL, goal_id FK NULL, amount NUMERIC>0)` - split of a cash income across budget categories / savings goals (goal legs also write `contributions`)
+- `cash_reconciliations(id, user_id FK, recorded NUMERIC, counted NUMERIC, diff NUMERIC, accepted BOOLEAN, date DATE)` - "Count my cash" checks; accepted diffs post an `Unaccounted` correction transaction
 - `budgets(id, user_id FK, name, essential|flexible|uncertain, limit NUMERIC)`
 - `income_expectations(id, user_id FK, source, expected_date DATE?, estimated_amount NUMERIC?, status: expected|received|delayed|cancelled, regularity: regular|variable|one-off)`
 - `savings_goals(id, user_id FK, title, target NUMERIC, deadline DATE?, status: active|paused|done)`
@@ -83,22 +89,32 @@ Multiple sources, record actual, update expected date without penalty. Stale exp
 - Scenario cards (allowance delayed, course material, charger breaks, overspend invite, transport rise, fictional investment). Show gain AND loss, label HYPOTHETICAL.
 - Insights MVP = rules only: "Transport is 1,200 above limit you set this week [period]." No AI.
 
+### 6.6 Manual Cash Income & Cash Balance (tracking only)
+- **Add cash income:** amount, source (Parent, Allowance, Part-time work, Gift, Other + user-saved custom sources, max ~20/user, unique case-insensitive), date, optional note. Few taps. `payment_method='cash'`. Starts at zero; optional "cash in pocket now?" setup field posts an opening cash income.
+- **Cash on hand:** derived, separate balance: `cash_on_hand = SUM(cash income) - SUM(cash expenses)`. Increases on cash income, decreases on cash expenses (`payment_method='cash'`). Never stored as a column (prevents drift). Home shows it as its own line; fully included in runway `available` with the cash share labeled.
+- **Allocate on entry:** optional after logging cash income: split across budget categories (food, transport, savings, etc.). Savings legs create `contributions` toward savings goals. Total allocated must equal income amount (validate, rounding to kobo); atomic save (transaction + allocations + contributions together or not at all).
+- **Log cash expenses:** same expense flow, `payment_method='cash'`, decreases cash on hand.
+- **Reconcile ("Count my cash"):** user enters physical count; app shows `diff = counted - recorded`. User may accept -> posts `Unaccounted` expense (if diff < 0) or correction income (if diff > 0) + `cash_reconciliations` row (`Unaccounted` counts as spending, flagged in insights). Or dismiss with no posting.
+- **Speed/usability:** cash log <= 3 taps from Home; optional reminders to record cash spending: max 1/day evening (~8pm local), OFF by default, generic text only (no amounts on lock screen).
+- Label everywhere: "tracking only, SBMS does not hold/move money."
+
 ## 7. UX - Build Order
 1. Welcome (1-sentence promise) -> Language select -> Plan my money / Explore demo
 2. Setup: balance, essentials, next-income (optional)
 3. Home / My Money Plan: available, protected, flexible, period, next action
-4. Add transaction (amount, type, category, date, note) - short form
-5. Budget: limits, spent, remaining
-6. Survival Mode screen
-7. Goals: target, deadline, suggested contribution, progress, pause/edit
-8. Learn: short lessons + quiz
-9. Simulator: virtual balance, scenario, choice, risk explainer
-10. Settings: language switch (no data loss), reminders, export/delete, privacy notice
+4. Add transaction (amount, type, category, date, note, payment method cash/bank/mobile/other, source) - short form, cash <= 3 taps from Home
+5. Cash: Cash on hand card on Home, allocate-on-entry split, Count my cash reconcile
+6. Budget: limits, spent, remaining
+7. Survival Mode screen
+8. Goals: target, deadline, suggested contribution, progress, pause/edit (cash savings legs auto-contribute)
+9. Learn: short lessons + quiz
+10. Simulator: virtual balance, scenario, choice, risk explainer
+11. Settings: language switch (no data loss), reminders (incl. optional cash-spending nudge), export/delete, privacy notice
 
 Categories default: food, transport, data, school materials, accommodation, personal.
 
 ## 8. Multilingual Plan
-- Glossary first: balance, expense, income, savings goal, risk, loss, return, inflation, investment.
+- Glossary first: balance, expense, income, savings goal, risk, loss, return, inflation, investment, cash on hand, reconcile/count my cash, unaccounted.
 - English reference copy, then localize critical flows (onboarding, home, add-txn, budget, survival, goals, errors).
 - Fluent-speaker review required for risk/safety copy. No raw MT for risk text.
 - Acceptance: language switch preserves session, fits phone width, user can explain runway + risk in own words.
@@ -126,9 +142,10 @@ Categories default: food, transport, data, school materials, accommodation, pers
 - Exit: RLS tested, calc tests green
 
 ### Phase 2 - Core Money Flows (2-3 wks)
-- [ ] Transactions CRUD + history
+- [ ] Transactions CRUD + history (incl. payment_method + source + custom cash_sources)
+- [ ] Cash on hand card + allocate-on-entry split + Count my cash reconcile + Unaccounted corrections
 - [ ] Budgets (essential/flexible) with spent/remaining
-- [ ] Goals + manual contributions + pause
+- [ ] Goals + manual contributions + cash-leg auto-contributions + pause
 - [ ] Basic insights (totals, budget alerts, weekly summary)
 - Exit: key tests pass, edit/delete works
 
@@ -165,6 +182,9 @@ Product owner (student contact + scope guard), Developer (app+calc+RLS), UX buil
 - [ ] Demo mode works
 - [ ] Language choice + switch preserves data
 - [ ] Txn add/edit/delete, budgets show spent/remaining
+- [ ] Cash income/expense with payment_method='cash', custom sources reusable
+- [ ] Cash on hand shown separately, allocate-on-entry sums to income, savings legs hit goals
+- [ ] Count my cash shows diff, accepted diff posts Unaccounted correction, dismissed posts nothing
 - [ ] Goals track without implying money moved
 - [ ] Runway handles missing/unknown dates transparently, essentials separated
 - [ ] Survival Mode explains change, no shaming, no essential-sacrifice advice
@@ -181,6 +201,7 @@ Product owner (student contact + scope guard), Developer (app+calc+RLS), UX buil
 - Bad translation -> fluent review + comprehension test
 - Guide mistaken for guarantee -> show assumptions/period, update prompts
 - Competitor overlap -> differentiate via cash-flow workflow + test evidence
+- Cash miscount / unrecorded cash spending -> Count my cash reconcile + "based on entered data" label, optional record-cash reminders
 
 ## 14. Future (Post-MVP, only with evidence + legal review)
 Phase 1: polish core. Phase 2: rules insights, reminders, term templates. Phase 3-5: bank education partner -> referral/deep-link -> read-only opt-in sync (never PIN/password in SBMS, revocable, least-privilege). Phase 6: institutional workshops (aggregated, no individual surveillance). Monetization to test later: freemium advanced tools, institution-sponsored, disclosed referrals, grants. Never sell identifiable txn data.

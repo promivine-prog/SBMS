@@ -25,7 +25,8 @@ Source of truth:
 ## 2. MVP Scope (P0)
 
 - Onboarding: language select, NGN, starting balance, optional next-income date + Demo mode
-- Income/expense log: manual add/edit/delete (amount, type, category, date, note)
+- Income/expense log: manual add/edit/delete (amount, type, category, date, note, payment method, source)
+- Manual Cash Income & Cash Balance (tracking only): cash income (amount, source incl. custom e.g. "Mum"/"Dad", date, note), separate "Cash on hand" balance, allocate-on-entry split across categories with savings legs counting to goals, cash expenses (`payment_method='cash'`), "Count my cash" reconcile with accept-as-Unaccounted option. <= 3 taps, optional record-cash reminders. SBMS never holds/moves money.
 - Budgets: essential / flexible limits, spent, remaining
 - Runway / daily guide: `flexible = available - protected_essentials - known_essentials_due - buffer`, `daily_guide = flexible / planning_days`
 - Irregular Income Mode: multiple sources (regular/variable/one-off), update dates without penalty
@@ -50,6 +51,7 @@ Full future partnership path (Phases 1-6) is in blueprint §16: prove core → s
 - **Survival Mode:** trigger on new expense / lower balance / delayed income / overspend. Never suggest skipping meals/meds/safe housing.
 - **Irregular Income:** expected income != available balance. Stale date → prompt to update.
 - **Savings:** warn if contribution conflicts with essentials. Label: "tracking only, SBMS does not move/hold money."
+- **Cash:** `cash_on_hand = SUM(cash income) - SUM(cash expenses)`, shown separately, feeds runway with cash share visible. Allocate-on-entry must sum to income (kobo rounding). Reconcile: `diff = counted - recorded`; accepted diffs post `Unaccounted` correction, dismissed posts nothing.
 - **Simulator + Insights:** fictional balances, show gain AND loss, rules text like "Transport is 1,200 above limit you set this week [period]."
 
 ## 5. Planned Stack
@@ -95,10 +97,10 @@ SBMS/
 
 No `src/`, no `package.json` yet. Next: confirm Sec.15 decisions (React+Supabase?, guest+account?, pilot schools?, reviewers?, lesson owner?) → Phase 0 + Phase 1 scaffold in parallel.
 
-## 10. Decisions Needed Before Code
+## 10. Decisions (locked 2026-10-09, solo build - you approve before execution)
 
-1. React+Supabase confirmed?
-2. Guest/demo + account, or account-only?
-3. Pilot schools (1-3)?
-4. Language reviewers secured?
-5. Lesson + simulator owner?
+1. Stack: React + Supabase confirmed. Frontend: Vercel. Backend deferred (local-first).
+2. Accounts: Hybrid - Guest/Demo local-only (localStorage, never writes to Supabase, Reset demo button) + optional Supabase Auth account. Guest -> account merge on signup.
+3. Pilot schools (1-3): owner-recruited, deferred. You handle.
+4. Language reviewers: pending - 1 speaker each yo/pcm/ig/ha before pilot.
+5. Lessons + simulator: AI drafts, you approve on review.
