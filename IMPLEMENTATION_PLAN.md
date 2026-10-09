@@ -185,12 +185,12 @@ Product owner (student contact + scope guard), Developer (app+calc+RLS), UX buil
 ## 14. Future (Post-MVP, only with evidence + legal review)
 Phase 1: polish core. Phase 2: rules insights, reminders, term templates. Phase 3-5: bank education partner -> referral/deep-link -> read-only opt-in sync (never PIN/password in SBMS, revocable, least-privilege). Phase 6: institutional workshops (aggregated, no individual surveillance). Monetization to test later: freemium advanced tools, institution-sponsored, disclosed referrals, grants. Never sell identifiable txn data.
 
-## 15. Decisions Needed Before Code
-1. React+Supabase confirmed? Or team prefers Firebase?
-2. Guest/demo + account, or account-only?
-3. Pilot schools (1-3)?
-4. Language reviewers secured?
-5. Lesson author + simulator scenarios owner?
+## 15. Decisions (locked 2026-10-09, solo build - you approve before execution)
+1. Stack: React + Supabase confirmed. Frontend: Vercel. Backend deferred (local-first, add Supabase project when approved).
+2. Accounts: Hybrid - Guest/Demo local-only (localStorage, never writes to Supabase, Reset demo button) + optional Supabase Auth account for cloud sync. Guest -> account merge on signup. Keeps DB clean of test errors.
+3. Pilot schools (1-3): owner-recruited, deferred. You handle.
+4. Language reviewers: pending - you to secure 1 speaker each yo/pcm/ig/ha before pilot; no lang ships as "reviewed" without sign-off.
+5. Lessons + simulator: AI drafts 5-6 lessons + 6 scenario cards, you approve on review.
 
 ## 16. Next Action
 Confirm Sec.15 decisions -> kick off Phase 0 interviews + scaffold Phase 1 in parallel.
