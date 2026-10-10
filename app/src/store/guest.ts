@@ -67,6 +67,10 @@ export interface SimSession {
 export interface GuestSettings {
   /** Optional evening nudge to record cash spending. OFF by default. Generic text only. */
   cashReminder: boolean;
+  /** First-run onboarding completed. */
+  onboarded: boolean;
+  /** True when the store holds fictional demo data. */
+  demoMode: boolean;
 }
 
 export interface GuestState {
@@ -101,7 +105,7 @@ export function defaultGuestState(): GuestState {
     incomeExpectations: [],
     learning: [],
     simSessions: [],
-    settings: { cashReminder: false },
+    settings: { cashReminder: false, onboarded: false, demoMode: false },
   };
 }
 
@@ -109,7 +113,14 @@ export function loadGuest(): GuestState {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return defaultGuestState();
-    return { ...defaultGuestState(), ...(JSON.parse(raw) as Partial<GuestState>) };
+    const parsed = JSON.parse(raw) as Partial<GuestState>;
+    const fresh = defaultGuestState();
+    return {
+      ...fresh,
+      ...parsed,
+      // Deep-merge nested settings so older saved states gain new flags.
+      settings: { ...fresh.settings, ...(parsed.settings ?? {}) },
+    };
   } catch {
     return defaultGuestState();
   }

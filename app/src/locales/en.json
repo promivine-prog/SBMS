@@ -177,10 +177,15 @@
     "reminders": "Reminders",
     "cashReminder": "Evening nudge to record cash spending",
     "export": "Export my data",
+    "backupNote": "Your records live on this device. Export regularly as your backup.",
     "delete": "Delete my data",
     "resetDemo": "Reset demo",
     "privacy": "Privacy notice",
-    "privacyText": "SBMS stores your records on this device (guest mode) or your private account. It never holds money. You can export or delete your data anytime."
+    "privacyText": "SBMS stores your records on this device (guest mode) or your private account. It never holds money. You can export or delete your data anytime.",
+    "diagnostics": "Diagnostics (on-device error log)",
+    "clearErrors": "Clear error log",
+    "noErrors": "No errors recorded.",
+    "demoBadge": "Demo data (fictional)"
   },
   "errors": {
     "invalidAmount": "Enter an amount greater than zero.",
