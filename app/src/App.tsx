@@ -4,6 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBadge from './components/OfflineBadge';
 import { GuestProvider, useGuest } from './store/useGuestState';
 import './i18n';
+import Account from './pages/Account';
 import Add from './pages/Add';
 import Budget from './pages/Budget';
 import Goals from './pages/Goals';
@@ -31,6 +32,7 @@ function Shell() {
         <NavLink to="/learn">{t('nav.learn')}</NavLink>
         <NavLink to="/simulator">{t('nav.simulator')}</NavLink>
         <NavLink to="/settings">{t('nav.settings')}</NavLink>
+        <NavLink to="/account">{t('nav.account')}</NavLink>
         <OfflineBadge />
       </nav>
       <main style={{ padding: 16, maxWidth: 640, margin: '0 auto' }}>
@@ -44,6 +46,7 @@ function Shell() {
           <Route path="/learn" element={<Learn />} />
           <Route path="/simulator" element={<Simulator />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </main>
     </Router>

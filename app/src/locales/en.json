@@ -12,7 +12,8 @@
     "goals": "Goals",
     "learn": "Learn",
     "simulator": "Simulator",
-    "settings": "Settings"
+    "settings": "Settings",
+    "account": "Account"
   },
   "home": {
     "title": "My Money Plan",
@@ -133,6 +134,23 @@
     "playAgain": "Play again",
     "history": "Past sessions",
     "start": "Start scenario"
+  },
+  "account": {
+    "title": "Account & cloud backup",
+    "email": "Email",
+    "password": "Password",
+    "signup": "Create account",
+    "login": "Log in",
+    "logout": "Log out",
+    "loggedInAs": "Logged in as",
+    "upload": "Upload my records",
+    "download": "Download cloud copy",
+    "uploaded": "Uploaded records",
+    "downloaded": "Cloud copy applied. Local records were replaced.",
+    "done": "Done.",
+    "notConfigured": "Cloud sync is not configured on this build. Guest mode still works.",
+    "uploadNote": "Upload replaces your cloud copy. Goal totals upload as single opening entries.",
+    "downloadNote": "Download replaces the records on this device with the cloud copy."
   },
   "survival": {
     "title": "Survival Mode",

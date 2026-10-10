@@ -142,5 +142,11 @@ export function resetDemo(): GuestState {
 }
 
 export function newId(): string {
+  // UUIDs so future cloud uploads keep stable ids (legacy base36 ids remap on upload).
+  try {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  } catch {
+    /* fall through to legacy generator */
+  }
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
