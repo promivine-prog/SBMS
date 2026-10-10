@@ -23,7 +23,7 @@ function Reconcile({ recorded }: { recorded: number }) {
   const valid = counted !== '' && Number.isFinite(n) && n >= 0;
   const diff = valid ? reconcileDiff(recorded, n) : null;
   return (
-    <div style={{ border: '1px solid #ccc', padding: 8, marginTop: 8 }}>
+    <div className="card">
       <label>
         {t('cash.counted')}: <input type="number" min="0" step="0.01" value={counted} onChange={(e) => setCounted(e.target.value)} />
       </label>
@@ -124,17 +124,19 @@ export default function Home() {
 
   return (
     <section>
+      <div className="card hero">
       <h1>{t('home.title')}</h1>
       <p>{t('trackingOnly')}</p>
       <ul>
-        <li>{t('home.available')}: ₦{state.balance.toLocaleString()}{state.settings.includeCash && cash > 0 && <> ({t('home.inclCash')}: ₦{cash.toLocaleString()})</>}</li>
-        <li>{t('home.cashOnHand')}: ₦{cash.toLocaleString()}</li>
-        <li>{t('home.protected')}: ₦{state.protectedEssentials.toLocaleString()}</li>
-        <li>{t('home.flexible')}: ₦{runway.flexible.toLocaleString()}</li>
-        <li>{t('home.period')}: {state.planningDays} days</li>
-        <li>{t('home.dailyGuide')}: {runway.dailyGuide === null ? t('home.shortfall') : `₦${runway.dailyGuide.toLocaleString()}`}</li>
+        <li>{t('home.available')}: <span>₦{state.balance.toLocaleString()}{state.settings.includeCash && cash > 0 && <> ({t('home.inclCash')}: ₦{cash.toLocaleString()})</>}</span></li>
+        <li>{t('home.cashOnHand')}: <span>₦{cash.toLocaleString()}</span></li>
+        <li>{t('home.protected')}: <span>₦{state.protectedEssentials.toLocaleString()}</span></li>
+        <li>{t('home.flexible')}: <span>₦{runway.flexible.toLocaleString()}</span></li>
+        <li>{t('home.period')}: <span>{state.planningDays} days</span></li>
+        <li>{t('home.dailyGuide')}: <span>{runway.dailyGuide === null ? t('home.shortfall') : `₦${runway.dailyGuide.toLocaleString()}`}</span></li>
       </ul>
       <p><em>{t('estimateNote')}</em></p>
+      </div>
 
       <Survival />
 

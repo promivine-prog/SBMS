@@ -48,7 +48,7 @@ export default function Survival() {
   const extend = (n: number) => update((s) => ({ ...s, planningDays: s.planningDays + n }));
 
   return (
-    <section style={{ border: '2px solid #0e7c3a', padding: 12, marginTop: 16 }}>
+    <section className="card survival">
       <h2>{t('survival.title')}</h2>
       <p>{t('survival.mayRunShort')}</p>
       <h3>{t('survival.whatChanged')}</h3>

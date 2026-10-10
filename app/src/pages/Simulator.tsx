@@ -85,7 +85,7 @@ export default function Simulator() {
         </>
       ) : (
         last && (
-          <div style={{ border: '1px solid #ccc', padding: 8 }}>
+          <div className="card">
             <h2>{t('sim.result')}</h2>
             <p>{last.outcome}</p>
             <p><strong>{t('sim.risk')}:</strong> {last.risk}</p>

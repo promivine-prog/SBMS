@@ -100,7 +100,7 @@ export default function Income() {
       </div>
 
       {stale.length > 0 && (
-        <div style={{ border: '2px solid #b00', padding: 8, marginTop: 12 }}>
+        <div className="stale">
           <strong>{t('income.staleTitle')}</strong>
           {stale.map((x) => <p key={x.id}>{x.source}{x.expectedDate ? ` (${x.expectedDate})` : ''}</p>)}
         </div>

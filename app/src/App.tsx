@@ -22,7 +22,7 @@ function Shell() {
   if (!state.settings.onboarded) return <Welcome />;
   return (
     <Router>
-      <nav style={{ display: 'flex', gap: 12, flexWrap: 'wrap', padding: 12, alignItems: 'center' }}>
+      <nav className="tabbar">
         <NavLink to="/">{t('nav.home')}</NavLink>
         <NavLink to="/plan">{t('nav.plan')}</NavLink>
         <NavLink to="/add">{t('nav.add')}</NavLink>
@@ -35,7 +35,7 @@ function Shell() {
         <NavLink to="/account">{t('nav.account')}</NavLink>
         <OfflineBadge />
       </nav>
-      <main style={{ padding: 16, maxWidth: 640, margin: '0 auto' }}>
+      <main className="container">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/plan" element={<Plan />} />

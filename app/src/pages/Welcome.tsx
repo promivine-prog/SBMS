@@ -56,7 +56,7 @@ export default function Welcome() {
 
   if (!setup) {
     return (
-      <main style={{ padding: 24, maxWidth: 520, margin: '0 auto' }}>
+      <main className="welcome">
         <h1>{t('appName')}</h1>
         <p>{t('tagline')}</p>
         <label>
