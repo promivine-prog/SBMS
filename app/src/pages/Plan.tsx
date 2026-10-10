@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { cashOnHand } from '../lib/cash';
+import { effectiveAvailable } from '../lib/plan';
 import { calcRunway } from '../lib/runway';
 import { planningDaysFrom } from '../lib/plan';
 import { useGuest } from '../store/useGuestState';
@@ -22,12 +24,13 @@ export default function Plan() {
   const [saved, setSaved] = useState(false);
 
   const t0 = today();
+  const cash = cashOnHand(state.transactions.map((x) => ({ type: x.type, amount: x.amount, paymentMethod: x.paymentMethod })));
   const fromDate = mode === 'date' ? planningDaysFrom(date || undefined, t0) : null;
   const effDays = mode === 'date' ? fromDate : Number(days);
   let preview: string;
   try {
     const r = calcRunway({
-      available: Number(balance) || 0,
+      available: effectiveAvailable(Number(balance) || 0, cash, state.settings.includeCash),
       protectedEssentials: Number(prot) || 0,
       knownEssentialsDue: Number(due) || 0,
       buffer: Number(buffer) || 0,
@@ -63,6 +66,8 @@ export default function Plan() {
         <label>{t('plan.protected')}: <input type="number" min="0" step="0.01" value={prot} onChange={(e) => setProt(e.target.value)} /></label>
         <label>{t('plan.due')}: <input type="number" min="0" step="0.01" value={due} onChange={(e) => setDue(e.target.value)} /></label>
         <label>{t('plan.buffer')}: <input type="number" min="0" step="0.01" value={buffer} onChange={(e) => setBuffer(e.target.value)} /></label>
+        <label><input type="checkbox" checked={state.settings.includeCash}
+          onChange={(e) => update((s) => ({ ...s, settings: { ...s.settings, includeCash: e.target.checked } }))} /> {t('plan.includeCash')}</label>
         <label>{t('plan.mode')}: <select value={mode} onChange={(e) => setMode(e.target.value as 'days' | 'date')}>
           <option value="days">{t('plan.byDays')}</option>
           <option value="date">{t('plan.byDate')}</option>

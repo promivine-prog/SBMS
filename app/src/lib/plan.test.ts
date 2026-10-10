@@ -1,8 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { daysBetween, essentialsConflict, isStale, planningDaysFrom, survivalTriggers } from './plan';
+import { daysBetween, effectiveAvailable, essentialsConflict, isStale, planningDaysFrom, survivalTriggers } from './plan';
 
-describe('essentialsConflict', () => {
-  it('flags saving when essentials already consume the balance', () => {
+describe('effectiveAvailable', () => {
+  it('keeps manual balance alone by default (no double-count risk)', () => {
+    expect(effectiveAvailable(12500, 6000, false)).toBe(12500);
+  });
+  it('adds cash on hand only when opted in', () => {
+    expect(effectiveAvailable(12500, 6000, true)).toBe(18500);
+    expect(effectiveAvailable(12500, -200, true)).toBe(12500);
+  });
+});
+
+describe('essentialsConflict', () => {  it('flags saving when essentials already consume the balance', () => {
     expect(essentialsConflict(5000, 5000, 0)).toBe(true);
     expect(essentialsConflict(5000, 4000, 1500)).toBe(true);
     expect(essentialsConflict(12000, 6000, 1000)).toBe(false);

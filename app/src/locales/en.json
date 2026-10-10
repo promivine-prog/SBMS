@@ -18,6 +18,7 @@
   "home": {
     "title": "My Money Plan",
     "available": "Available now",
+    "inclCash": "incl. cash",
     "cashOnHand": "Cash on hand",
     "protected": "Protected for essentials",
     "flexible": "Flexible amount in this plan",
@@ -34,6 +35,7 @@
     "protected": "Protected for essentials (₦)",
     "due": "Essential bills still due (₦)",
     "buffer": "Safety buffer (₦)",
+    "includeCash": "Include cash on hand in available (labeled)",
     "mode": "Planning horizon",
     "byDays": "Number of days",
     "byDate": "Next income date",
@@ -102,6 +104,7 @@
     "accept": "Accept adjustment",
     "dismiss": "Dismiss",
     "unaccounted": "Unaccounted",
+    "quickSave": "Quick save",
     "allocate": "Split across categories",
     "reminderNudge": "Record today's cash spending?"
   },
@@ -157,7 +160,7 @@
     "downloaded": "Cloud copy applied. Local records were replaced.",
     "done": "Done.",
     "notConfigured": "Cloud sync is not configured on this build. Guest mode still works.",
-    "uploadNote": "Upload replaces your cloud copy. Goal totals upload as single opening entries.",
+    "uploadNote": "Upload merges these records into your cloud copy (nothing there is deleted). Goal totals upload as single opening entries.",
     "downloadNote": "Download replaces the records on this device with the cloud copy."
   },
   "survival": {

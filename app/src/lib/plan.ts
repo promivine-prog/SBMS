@@ -1,5 +1,6 @@
 // Pure planning helpers: horizons, stale income, survival triggers.
 // Plan ref: IMPLEMENTATION_PLAN.md §6.1–6.3. No UI side-effects, no I/O.
+import { roundKobo } from './runway';
 
 export type ExpectStatus = 'expected' | 'received' | 'delayed' | 'cancelled';
 
@@ -8,6 +9,11 @@ export interface MiniExpectation {
   source: string;
   expectedDate?: string;
   status: ExpectStatus;
+}
+
+/** Effective planning balance: manual figure plus cash on hand only when opted in. */
+export function effectiveAvailable(balance: number, cashOnHand: number, includeCash: boolean): number {
+  return roundKobo(balance + (includeCash ? Math.max(0, cashOnHand) : 0));
 }
 
 /** True when essentials + buffer already consume the balance: saving now risks them. */

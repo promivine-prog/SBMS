@@ -74,14 +74,16 @@ export interface CloudSession {
   at: string;
 }
 
+export type ProfileSettings = Record<string, number | boolean>;
+
 export interface CloudProfile {
   language?: string;
   currency?: string;
-  settings?: Partial<Record<string, number>>;
+  settings?: ProfileSettings;
 }
 
 export interface CloudRows {
-  profile: { language: string; currency: string; settings: Record<string, number> };
+  profile: { language: string; currency: string; settings: ProfileSettings };
   transactions: CloudTransaction[];
   budgets: CloudBudget[];
   goals: CloudGoal[];
@@ -157,6 +159,7 @@ export function remapForCloud(
           knownEssentialsDue: state.knownEssentialsDue,
           buffer: state.buffer,
           planningDays: state.planningDays,
+          includeCash: state.settings.includeCash,
         },
       },
       transactions,
@@ -248,6 +251,6 @@ export function fromCloud(rows: {
       finalBalance: s.outcome?.finalBalance ?? 0,
       at: s.at,
     })),
-    settings: { cashReminder: false, onboarded: true, demoMode: false },
+    settings: { cashReminder: false, onboarded: true, demoMode: false, includeCash: rows.profile?.settings?.includeCash === true },
   };
 }

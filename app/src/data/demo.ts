@@ -31,6 +31,6 @@ export function seedDemo(): GuestState {
     ],
     learning: [],
     simSessions: [],
-    settings: { cashReminder: false, onboarded: true, demoMode: true },
+    settings: { cashReminder: false, onboarded: true, demoMode: true, includeCash: false },
   };
 }

@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cashOnHand, reconcileDiff } from '../lib/cash';
 import { budgetAlerts, spentByCategory, totalByType, weekStart } from '../lib/insights';
-import { calcRunway } from '../lib/runway';
-import { newId } from '../store/guest';
+import { effectiveAvailable } from '../lib/plan';
+import { calcRunway, roundKobo } from '../lib/runway';
+import { DEFAULT_CATEGORIES, newId } from '../store/guest';
 import { useGuest } from '../store/useGuestState';
 import Survival from '../components/Survival';
 
@@ -58,13 +59,56 @@ function Reconcile({ recorded }: { recorded: number }) {
   );
 }
 
+/** Two-tap cash expense: amount + category, today, cash. Full form lives on Add. */
+function QuickCash() {
+  const { t } = useTranslation();
+  const { update } = useGuest();
+  const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState('food');
+  const [err, setErr] = useState('');
+  function save() {
+    const a = roundKobo(Number(amount));
+    if (!Number.isFinite(a) || a <= 0) {
+      setErr(t('errors.invalidAmount'));
+      return;
+    }
+    update((s) => ({
+      ...s,
+      transactions: [
+        ...s.transactions,
+        { id: newId(), type: 'expense' as const, amount: a, category: category.trim() || 'personal', date: today(), paymentMethod: 'cash' as const },
+      ],
+    }));
+    setAmount('');
+    setErr('');
+  }
+  return (
+    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+      <label>{t('add.amount')}: <input type="number" min="0" step="0.01" style={{ width: 120 }} value={amount} onChange={(e) => setAmount(e.target.value)} /></label>
+      <label>{t('add.category')}: <input list="sbms-quickcats" style={{ width: 130 }} value={category} onChange={(e) => setCategory(e.target.value)} />
+        <datalist id="sbms-quickcats">{DEFAULT_CATEGORIES.map((c) => <option key={c} value={c} />)}</datalist></label>
+      <button onClick={save}>{t('cash.quickSave')}</button>
+      {err && <span role="alert">{err}</span>}
+    </div>
+  );
+}
+
+/** Passive evening nudge: generic text, only when enabled and nothing logged today. */
+function CashNudge({ hasCashToday }: { hasCashToday: boolean }) {
+  const { t } = useTranslation();
+  const { state } = useGuest();
+  if (!state.settings.cashReminder || hasCashToday) return null;
+  return <p role="note">{t('cash.reminderNudge')}</p>;
+}
+
 export default function Home() {
   const { t } = useTranslation();
   const { state } = useGuest();
   const cashTxns = state.transactions.map((x) => ({ type: x.type, amount: x.amount, paymentMethod: x.paymentMethod }));
   const cash = cashOnHand(cashTxns);
+  const avail = effectiveAvailable(state.balance, cash, state.settings.includeCash);
   const runway = calcRunway({
-    available: state.balance,
+    available: avail,
     protectedEssentials: state.protectedEssentials,
     knownEssentialsDue: state.knownEssentialsDue,
     buffer: state.buffer,
@@ -83,7 +127,7 @@ export default function Home() {
       <h1>{t('home.title')}</h1>
       <p>{t('trackingOnly')}</p>
       <ul>
-        <li>{t('home.available')}: ₦{state.balance.toLocaleString()}</li>
+        <li>{t('home.available')}: ₦{state.balance.toLocaleString()}{state.settings.includeCash && cash > 0 && <> ({t('home.inclCash')}: ₦{cash.toLocaleString()})</>}</li>
         <li>{t('home.cashOnHand')}: ₦{cash.toLocaleString()}</li>
         <li>{t('home.protected')}: ₦{state.protectedEssentials.toLocaleString()}</li>
         <li>{t('home.flexible')}: ₦{runway.flexible.toLocaleString()}</li>
@@ -95,6 +139,8 @@ export default function Home() {
       <Survival />
 
       <h2>{t('cash.title')}</h2>
+      <QuickCash />
+      <CashNudge hasCashToday={state.transactions.some((x) => x.paymentMethod === 'cash' && x.date === today())} />
       <Reconcile recorded={cash} />
 
       <h2>{t('insights.title')}</h2>

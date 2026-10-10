@@ -15,6 +15,7 @@ import {
   type CloudSession,
   type CloudSource,
   type CloudTransaction,
+  type IdMap,
 } from '../lib/sync';
 import type { GuestState } from './guest';
 
@@ -25,6 +26,24 @@ function today(): string {
 
 export function cloudConfigured(): boolean {
   return getSupabase() !== null;
+}
+
+const MAP_KEY = 'sbms-cloud-map';
+
+function loadMap(): IdMap {
+  try {
+    return (JSON.parse(localStorage.getItem(MAP_KEY) ?? '{}') ?? {}) as IdMap;
+  } catch {
+    return {};
+  }
+}
+
+function saveMap(map: IdMap): void {
+  try {
+    localStorage.setItem(MAP_KEY, JSON.stringify(map));
+  } catch {
+    /* private mode: re-upload remaps next time */
+  }
 }
 
 export async function currentEmail(): Promise<string | null> {
@@ -61,8 +80,10 @@ export async function signOut(): Promise<void> {
 }
 
 /**
- * Upload REPLACES the user's cloud dataset with local records (delete then
- * insert per table). Goal totals upload as single opening contributions.
+ * Upload MERGES local records into the cloud copy (upsert by stable id).
+ * Nothing on the server is deleted except scoped refreshes: opening
+ * contributions and the custom-source name list, which are rebuilt from
+ * local truth each time. Goal totals upload as single opening entries.
  */
 export async function uploadAll(state: GuestState): Promise<{ counts: Record<string, number> }> {
   const db = getSupabase();
@@ -70,7 +91,8 @@ export async function uploadAll(state: GuestState): Promise<{ counts: Record<str
   const { data } = await db.auth.getSession();
   const uid = data.session?.user.id;
   if (!uid) throw new Error('Log in first.');
-  const { rows } = remapForCloud(state, {}, () => crypto.randomUUID(), today());
+  const { rows, map } = remapForCloud(state, loadMap(), () => crypto.randomUUID(), today());
+  saveMap(map);
   const withUser = <T extends object>(list: T[]): (T & { user_id: string })[] =>
     list.map((r) => ({ ...r, user_id: uid }));
 
@@ -81,26 +103,37 @@ export async function uploadAll(state: GuestState): Promise<{ counts: Record<str
   if (pErr) throw new Error(pErr.message);
 
   const counts: Record<string, number> = {};
-  const tables: [string, object[]][] = [
-    ['transactions', withUser(rows.transactions)],
-    ['budgets', withUser(rows.budgets)],
-    ['savings_goals', withUser(rows.goals)],
-    ['contributions', withUser(rows.contributions)],
-    ['income_expectations', withUser(rows.expectations)],
-    ['cash_sources', withUser(rows.sources)],
-    ['cash_reconciliations', []],
-    ['learning_progress', withUser(rows.learning)],
-    ['simulator_sessions', withUser(rows.sessions)],
+  // Stable-id tables: pure upsert, server rows from other devices survive.
+  const upserts: [string, object[], string][] = [
+    ['transactions', withUser(rows.transactions), 'id'],
+    ['budgets', withUser(rows.budgets), 'id'],
+    ['savings_goals', withUser(rows.goals), 'id'],
+    ['income_expectations', withUser(rows.expectations), 'id'],
+    ['learning_progress', withUser(rows.learning), 'user_id,lesson_id'],
+    ['simulator_sessions', withUser(rows.sessions), 'id'],
   ];
-  for (const [table, insertRows] of tables) {
-    const { error: dErr } = await db.from(table).delete().eq('user_id', uid);
-    if (dErr) throw new Error(`${table}: ${dErr.message}`);
-    if (insertRows.length > 0) {
-      const { error: iErr } = await db.from(table).insert(insertRows);
-      if (iErr) throw new Error(`${table}: ${iErr.message}`);
+  for (const [table, insertRows, conflict] of upserts) {
+    if (insertRows.length === 0) {
+      counts[table] = 0;
+      continue;
     }
+    const { error } = await db.from(table).upsert(insertRows, { onConflict: conflict });
+    if (error) throw new Error(`${table}: ${error.message}`);
     counts[table] = insertRows.length;
   }
+  // Rebuilt-from-local tables: scoped refresh keeps them exact.
+  const { error: cDel } = await db.from('contributions').delete().eq('user_id', uid);
+  if (cDel) throw new Error(`contributions: ${cDel.message}`);
+  if (rows.contributions.length > 0) {
+    const { error: cIns } = await db.from('contributions').insert(withUser(rows.contributions));
+    if (cIns) throw new Error(`contributions: ${cIns.message}`);
+  }
+  counts['contributions'] = rows.contributions.length;
+  for (const s of withUser(rows.sources)) {
+    const { error: sErr } = await db.from('cash_sources').upsert(s, { onConflict: 'cash_sources_user_name' });
+    if (sErr) throw new Error(`cash_sources: ${sErr.message}`);
+  }
+  counts['cash_sources'] = rows.sources.length;
   return { counts };
 }
 

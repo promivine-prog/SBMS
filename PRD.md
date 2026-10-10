@@ -40,7 +40,7 @@ Primary: university / polytechnic / college-of-education students managing small
 ### 4.1 Onboarding & accounts (Hybrid)
 - Language select (en/yo/pcm/ig/ha), NGN default, starting balance, optional next-income date.
 - Plan my money / Explore demo.
-- Guest/Demo: local-only (`localStorage`), never writes to Supabase, Reset demo button. Account (optional): Supabase Auth, cloud sync, guest→account merge on signup.
+- Guest/Demo: local-only (`localStorage`), never writes to Supabase, Reset demo button. Account (optional): Supabase Auth, cloud sync. Merge rule: upload merges local records into the cloud copy by stable id (nothing server-side is deleted except scoped refreshes of opening contributions and the source-name list); download replaces local records (explicit, disclosed).
 
 ### 4.2 Income / expense log
 - Manual add/edit/delete: amount (>0, kobo rounding), type (income|expense), category, date, note (optional), payment method (cash|bank|mobile|other), source (optional).
@@ -49,11 +49,11 @@ Primary: university / polytechnic / college-of-education students managing small
 ### 4.3 Manual Cash Income & Cash Balance (tracking only) — NEW
 - **Add cash income:** fields amount, source (Parent, Allowance, Part-time work, Gift, Other), date, optional note. `payment_method='cash'`.
 - **Custom sources:** user can save custom sources (e.g. "Mum", "Dad") for quick reuse; stored per user (`cash_sources`), seeds listed above. Cap: 5 seeds + max ~20 custom per user; names unique per user (case-insensitive — "mum" = "Mum"). At cap, block with "delete an unused source to add a new one."
-- **Cash on hand:** derived separate balance: `cash_on_hand = SUM(cash income) − SUM(cash expenses)`. Shown as its own Home card; fully included in runway `available` with the cash share labeled (never silently merged). Starts at zero; optional "cash in pocket now?" setup field posts an opening cash income.
+- **Cash on hand:** derived separate balance: `cash_on_hand = SUM(cash income) − SUM(cash expenses)`. Shown as its own Home card. Stays OUT of runway `available` by default (avoids double-counting the manual balance); an opt-in toggle folds it in with the cash share labeled. Starts at zero; optional "cash in pocket now?" setup field posts an opening cash income.
 - **Allocate on entry:** optional after logging cash income: split across budget categories (food, transport, savings, etc.). Savings legs create `contributions` toward savings goals. Total allocated must equal income amount (validate + kobo rounding); save is atomic (transaction + allocations + contributions together or not at all).
 - **Log cash expenses:** same expense flow with payment type "Cash"; decreases cash on hand.
 - **Reconcile ("Count my cash"):** user enters physical count; app shows `diff = counted − recorded`. Accept → posts `Unaccounted` expense (diff < 0) or correction income (diff > 0) + `cash_reconciliations` row. `Unaccounted` counts as spending under its own category and is flagged in insights (never hidden). Dismiss → posts nothing.
-- **Speed/usability:** cash log ≤ 3 taps from Home. Optional reminders to record cash spending: max 1/day, evening (~8pm local), OFF by default, generic text only ("Record today's cash spending?" — never amounts, nothing financial on lock screen).
+- **Speed/usability:** Home "Quick cash" widget (amount + category, today, cash — 2 taps plus typing); full form on Add. Passive in-app nudge only: when the cash reminder is ON and no cash is logged today, Home shows the generic "Record today's cash spending?" line. No push scheduling, no lock-screen amounts, no amounts in any notification text.
 - Label everywhere: "tracking only, SBMS does not hold/move money."
 
 ### 4.4 Budgets

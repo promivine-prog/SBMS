@@ -91,11 +91,11 @@ Multiple sources, record actual, update expected date without penalty. Stale exp
 
 ### 6.6 Manual Cash Income & Cash Balance (tracking only)
 - **Add cash income:** amount, source (Parent, Allowance, Part-time work, Gift, Other + user-saved custom sources, max ~20/user, unique case-insensitive), date, optional note. Few taps. `payment_method='cash'`. Starts at zero; optional "cash in pocket now?" setup field posts an opening cash income.
-- **Cash on hand:** derived, separate balance: `cash_on_hand = SUM(cash income) - SUM(cash expenses)`. Increases on cash income, decreases on cash expenses (`payment_method='cash'`). Never stored as a column (prevents drift). Home shows it as its own line; fully included in runway `available` with the cash share labeled.
+- **Cash on hand:** derived, separate balance: `cash_on_hand = SUM(cash income) - SUM(cash expenses)`. Increases on cash income, decreases on cash expenses (`payment_method='cash'`). Never stored as a column (prevents drift). Home shows it as its own line; OUT of runway `available` by default (manual balance is the stated truth — avoids double-counting); opt-in toggle on Plan folds it in with the share labeled.
 - **Allocate on entry:** optional after logging cash income: split across budget categories (food, transport, savings, etc.). Savings legs create `contributions` toward savings goals. Total allocated must equal income amount (validate, rounding to kobo); atomic save (transaction + allocations + contributions together or not at all).
 - **Log cash expenses:** same expense flow, `payment_method='cash'`, decreases cash on hand.
 - **Reconcile ("Count my cash"):** user enters physical count; app shows `diff = counted - recorded`. User may accept -> posts `Unaccounted` expense (if diff < 0) or correction income (if diff > 0) + `cash_reconciliations` row (`Unaccounted` counts as spending, flagged in insights). Or dismiss with no posting.
-- **Speed/usability:** cash log <= 3 taps from Home; optional reminders to record cash spending: max 1/day evening (~8pm local), OFF by default, generic text only (no amounts on lock screen).
+- **Speed/usability:** Home "Quick cash" widget (amount + category, today, cash); full form on Add. Passive in-app nudge only (generic line when enabled and nothing logged today) — no push scheduling, no lock-screen amounts.
 - Label everywhere: "tracking only, SBMS does not hold/move money."
 
 ## 7. UX - Build Order

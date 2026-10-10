@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { isStale, survivalTriggers } from '../lib/plan';
+import { cashOnHand } from '../lib/cash';
+import { effectiveAvailable } from '../lib/plan';
 import { spentByCategory } from '../lib/insights';
 import { calcRunway } from '../lib/runway';
 import { useGuest } from '../store/useGuestState';
@@ -19,8 +21,9 @@ export default function Survival() {
   const { state, update } = useGuest();
   const t0 = today();
 
+  const cash = cashOnHand(state.transactions.map((x) => ({ type: x.type, amount: x.amount, paymentMethod: x.paymentMethod })));
   const runway = calcRunway({
-    available: state.balance,
+    available: effectiveAvailable(state.balance, cash, state.settings.includeCash),
     protectedEssentials: state.protectedEssentials,
     knownEssentialsDue: state.knownEssentialsDue,
     buffer: state.buffer,

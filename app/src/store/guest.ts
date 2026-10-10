@@ -71,6 +71,8 @@ export interface GuestSettings {
   onboarded: boolean;
   /** True when the store holds fictional demo data. */
   demoMode: boolean;
+  /** Fold cash on hand into runway available (labeled). Default OFF to avoid double-counting. */
+  includeCash: boolean;
 }
 
 export interface GuestState {
@@ -108,7 +110,7 @@ export function defaultGuestState(): GuestState {
     incomeExpectations: [],
     learning: [],
     simSessions: [],
-    settings: { cashReminder: false, onboarded: false, demoMode: false },
+    settings: { cashReminder: false, onboarded: false, demoMode: false, includeCash: false },
   };
 }
 
