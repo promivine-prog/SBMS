@@ -10,6 +10,7 @@ node_modules
 dist
 dist-ssr
 e2e/shots
+test-results
 *.local
 
 # Editor directories and files
