@@ -125,4 +125,10 @@ test('full student journey', async ({ page }) => {
   await expect(page.getByText('Demo data (fictional)')).toBeHidden();
   await page.getByRole('button', { name: 'Reset demo' }).click();
   await expect(page.getByRole('heading', { name: 'SBMS' })).toBeVisible();
+
+  // 13. Cloud is configured on this build (env wired)
+  await page.getByRole('button', { name: 'Explore demo' }).click();
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Account' }).click();
+  await expect(page.getByRole('button', { name: 'Create account' })).toBeVisible();
 });
