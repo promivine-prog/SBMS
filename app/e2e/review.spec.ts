@@ -87,6 +87,7 @@ test('full student journey', async ({ page }) => {
   await page.getByLabel(/Expected date/).fill('2020-01-01');
   await page.getByRole('button', { name: 'Add expected income' }).click();
   await expect(page.getByText('This date has passed')).toBeVisible();
+  await page.getByRole('button', { name: /Allowance/ }).click();
   await page.getByRole('button', { name: 'Delayed' }).click();
   await expect(page.getByText('This date has passed')).toBeHidden();
 

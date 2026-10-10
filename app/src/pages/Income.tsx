@@ -22,6 +22,7 @@ export default function Income() {
   const [recvMethod, setRecvMethod] = useState<PaymentMethod>('cash');
   const [editDateFor, setEditDateFor] = useState<string | null>(null);
   const [editDate, setEditDate] = useState('');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const t0 = today();
 
@@ -110,21 +111,31 @@ export default function Income() {
       <ul>
         {state.incomeExpectations.map((x) => (
           <li key={x.id} style={isStale(x, t0) ? { fontWeight: 'bold' } : undefined}>
-            {x.source} · {t(`income.${x.status}`)} · {t(`income.${x.regularity === 'one-off' ? 'oneOff' : x.regularity}`)}
-            {x.expectedDate ? ` · ${x.expectedDate}` : ''}{x.estimatedAmount ? ` · ₦${x.estimatedAmount.toLocaleString()}` : ''}
+            <button
+              className="row-toggle"
+              aria-expanded={expandedId === x.id}
+              onClick={() => setExpandedId((p) => (p === x.id ? null : x.id))}
+            >
+              {expandedId === x.id ? '▾' : '▸'} {x.source} · {t(`income.${x.status}`)} · {t(`income.${x.regularity === 'one-off' ? 'oneOff' : x.regularity}`)}
+              {x.expectedDate ? ` · ${x.expectedDate}` : ''}{x.estimatedAmount ? ` · ₦${x.estimatedAmount.toLocaleString()}` : ''}
+            </button>
+            {expandedId === x.id && (
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
             {x.status === 'expected' && (
               <>
-                {' '}<button onClick={() => { setRecvFor(x.id); setRecvAmt(x.estimatedAmount ? String(x.estimatedAmount) : ''); }}>{t('income.markReceived')}</button>
-                {' '}<button onClick={() => { setEditDateFor(x.id); setEditDate(x.expectedDate ?? ''); }}>{t('add.edit')}</button>
-                {' '}<button onClick={() => setStatus(x.id, 'delayed')}>{t('income.delayed')}</button>
-                {' '}<button onClick={() => setStatus(x.id, 'cancelled')}>{t('income.cancelled')}</button>
+                <button className="small" onClick={() => { setRecvFor(x.id); setRecvAmt(x.estimatedAmount ? String(x.estimatedAmount) : ''); }}>{t('income.markReceived')}</button>
+                <button className="small" onClick={() => { setEditDateFor(x.id); setEditDate(x.expectedDate ?? ''); }}>{t('add.edit')}</button>
+                <button className="small" onClick={() => setStatus(x.id, 'delayed')}>{t('income.delayed')}</button>
+                <button className="small" onClick={() => setStatus(x.id, 'cancelled')}>{t('income.cancelled')}</button>
               </>
             )}
             {x.status === 'delayed' && (
               <>
-                {' '}<button onClick={() => { setEditDateFor(x.id); setEditDate(x.expectedDate ?? ''); }}>{t('add.edit')}</button>
-                {' '}<button onClick={() => setStatus(x.id, 'cancelled')}>{t('income.cancelled')}</button>
+                <button className="small" onClick={() => { setEditDateFor(x.id); setEditDate(x.expectedDate ?? ''); }}>{t('add.edit')}</button>
+                <button className="small" onClick={() => setStatus(x.id, 'cancelled')}>{t('income.cancelled')}</button>
               </>
+            )}
+            </div>
             )}
             {recvFor === x.id && (
               <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
