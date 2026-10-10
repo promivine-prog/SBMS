@@ -37,6 +37,7 @@ test('full student journey', async ({ page }) => {
   await page.getByRole('button', { name: 'Add budget' }).click();
   await expect(page.getByRole('cell', { name: 'food' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: /Remaining/ })).toBeVisible();
+  await page.screenshot({ path: 'e2e/shots/06-budget.png' });
 
   // 3. Goal
   await go(page, 'Goals', 'Savings goals');

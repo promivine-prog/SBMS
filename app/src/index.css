@@ -325,10 +325,11 @@ button.small {
 /* Data tables (budgets) */
 table.grid {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 6px;
   margin: 12px 0;
-  font-size: 0.92rem;
-  background: var(--card);
+  font-size: 0.95rem;
+  background: transparent;
 }
 
 table.grid caption {
@@ -340,7 +341,7 @@ table.grid caption {
 table.grid th,
 table.grid td {
   border-bottom: 1px solid var(--line);
-  padding: 10px 8px;
+  padding: 14px 12px;
   text-align: left;
   vertical-align: top;
 }
@@ -352,6 +353,23 @@ table.grid thead th {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
+  border-bottom: none;
+}
+
+table.grid tbody td {
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+table.grid tbody td:first-child {
+  border-left: 1px solid var(--line);
+  border-radius: 12px 0 0 12px;
+}
+
+table.grid tbody td:last-child {
+  border-right: 1px solid var(--line);
+  border-radius: 0 12px 12px 0;
 }
 
 table.grid td.num,

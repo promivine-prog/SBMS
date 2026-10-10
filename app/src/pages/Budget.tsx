@@ -50,9 +50,9 @@ export default function Budget() {
               <tr>
                 <th scope="col">{t('budget.name')}</th>
                 <th scope="col">{t('budget.kind')}</th>
-                <th scope="col" className="num">{t('budget.limit')} (₦)</th>
-                <th scope="col" className="num">{t('budget.spent')} (₦)</th>
-                <th scope="col" className="num">{t('budget.remaining')} (₦)</th>
+                <th scope="col" className="num">{t('budget.limit')}</th>
+                <th scope="col" className="num">{t('budget.spent')}</th>
+                <th scope="col" className="num">{t('budget.remaining')}</th>
                 <th scope="col"><span className="vh">{t('add.delete')}</span></th>
               </tr>
             </thead>

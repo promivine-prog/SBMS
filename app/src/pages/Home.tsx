@@ -152,7 +152,7 @@ export default function Home() {
       </ul>
       {alerts.map((a) => (
         <p key={a.budgetId}>
-          {a.name} is ₦{(a.spent - a.limit).toLocaleString()} {t('insights.alert')} ({t('budget.limit')}: ₦{a.limit.toLocaleString()}).
+          {a.name} is ₦{(a.spent - a.limit).toLocaleString()} {t('insights.alert')} ({t('budget.limit')}: {a.limit.toLocaleString()}).
         </p>
       ))}
       {unaccountedWeek > 0 && (
