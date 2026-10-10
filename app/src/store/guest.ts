@@ -50,6 +50,20 @@ export interface IncomeExpectation {
   regularity: 'regular' | 'variable' | 'one-off';
 }
 
+export interface LessonProgress {
+  lessonId: string;
+  quizScore: number;
+  at: string;
+}
+
+export interface SimSession {
+  id: string;
+  scenarioId: string;
+  choices: string[];
+  finalBalance: number;
+  at: string;
+}
+
 export interface GuestSettings {
   /** Optional evening nudge to record cash spending. OFF by default. Generic text only. */
   cashReminder: boolean;
@@ -65,6 +79,8 @@ export interface GuestState {
   goals: SavingsGoal[];
   customSources: string[];
   incomeExpectations: IncomeExpectation[];
+  learning: LessonProgress[];
+  simSessions: SimSession[];
   settings: GuestSettings;
 }
 
@@ -83,6 +99,8 @@ export function defaultGuestState(): GuestState {
     goals: [],
     customSources: [...CASH_SOURCE_SEEDS],
     incomeExpectations: [],
+    learning: [],
+    simSessions: [],
     settings: { cashReminder: false },
   };
 }

@@ -7,13 +7,10 @@ import Budget from './pages/Budget';
 import Goals from './pages/Goals';
 import Home from './pages/Home';
 import Income from './pages/Income';
+import Learn from './pages/Learn';
 import Plan from './pages/Plan';
 import Settings from './pages/Settings';
-
-function Soon({ k }: { k: string }) {
-  const { t } = useTranslation();
-  return <h1>{t(k)}</h1>;
-}
+import Simulator from './pages/Simulator';
 
 export default function App() {
   const { t } = useTranslation();
@@ -39,8 +36,8 @@ export default function App() {
             <Route path="/income" element={<Income />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/goals" element={<Goals />} />
-            <Route path="/learn" element={<Soon k="nav.learn" />} />
-            <Route path="/simulator" element={<Soon k="nav.simulator" />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/simulator" element={<Simulator />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </main>

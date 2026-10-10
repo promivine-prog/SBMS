@@ -113,6 +113,27 @@
     "add": "Add budget",
     "overBy": "over your limit"
   },
+  "learn": {
+    "title": "Learn",
+    "minutes": "min",
+    "startQuiz": "Take quiz",
+    "yourScore": "Your best",
+    "submit": "Submit answers",
+    "tryAgain": "Try again",
+    "backToLessons": "Back to lessons",
+    "onlyEnglish": "Lessons are in English for now — translations are in progress and need reviewer sign-off."
+  },
+  "sim": {
+    "title": "Simulator",
+    "hypothetical": "HYPOTHETICAL — play money only. Not real investing, no real profit or loss.",
+    "virtualBalance": "Virtual balance",
+    "choose": "Choose",
+    "result": "Outcome",
+    "risk": "Risk to understand",
+    "playAgain": "Play again",
+    "history": "Past sessions",
+    "start": "Start scenario"
+  },
   "survival": {
     "title": "Survival Mode",
     "mayRunShort": "Your current plan may run short.",
