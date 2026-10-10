@@ -16,6 +16,7 @@ export default function Welcome() {
 
   function startFresh() {
     const d = Math.max(1, Math.floor(Number(days) || 7));
+    window.history.replaceState(null, '', '/');
     update((s) => ({
       ...s,
       balance: Number(balance) || 0,
@@ -28,6 +29,7 @@ export default function Welcome() {
   function exploreDemo() {
     const demo = seedDemo();
     saveGuest(demo);
+    window.history.replaceState(null, '', '/');
     update(() => demo);
   }
 
