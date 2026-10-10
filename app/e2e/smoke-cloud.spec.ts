@@ -15,11 +15,16 @@ test('staging auth + upload + download round-trip', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'My Money Plan' })).toBeVisible();
 
   await page.getByRole('link', { name: 'Account' }).click();
-  const email = `sbms.smoke.${Date.now()}@gmail.com`;
+  const email = process.env.SMOKE_EMAIL ?? `sbms.smoke.${Date.now()}@gmail.com`;
+  const pwd = process.env.SMOKE_PASSWORD ?? 'Smoke-Test-12345!';
   await page.getByLabel(/Email/).fill(email);
-  await page.getByLabel(/Password/).fill('Smoke-Test-12345!');
+  await page.getByLabel(/Password/).fill(pwd);
   await page.getByRole('button', { name: 'Create account' }).click();
-  // If email confirmation is ON in staging, this fails here with "Log in first"-style status.
+  // If the address already exists (e.g. dashboard-created), fall back to login.
+  if (!(await page.getByText('Logged in as').isVisible({ timeout: 8000 }))) {
+    await page.getByRole('button', { name: 'Log in' }).click();
+  }
+  // If email confirmation is ON and the user is unconfirmed, this is where it stops.
   await expect(page.getByText('Logged in as')).toBeVisible({ timeout: 15000 });
 
   await page.getByRole('button', { name: 'Upload my records' }).click();
