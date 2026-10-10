@@ -40,7 +40,18 @@
     "mobile": "Mobile money",
     "other": "Other",
     "source": "Source",
-    "save": "Save"
+    "newSource": "New source name",
+    "save": "Save",
+    "saved": "Saved.",
+    "allocateTitle": "Split this cash income (optional)",
+    "allocateHint": "Splits must add up to the income. Savings splits grow your goals.",
+    "addSplit": "Add split",
+    "history": "History",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "update": "Update",
+    "noTxns": "No records yet. Add your first one above."
   },
   "cash": {
     "title": "Cash",
@@ -53,6 +64,19 @@
     "allocate": "Split across categories",
     "reminderNudge": "Record today's cash spending?"
   },
+  "budget": {
+    "title": "Budgets",
+    "name": "Category",
+    "limit": "Limit (₦)",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "kind": "Kind",
+    "essential": "Essential",
+    "flexible": "Flexible",
+    "uncertain": "Uncertain",
+    "add": "Add budget",
+    "overBy": "over your limit"
+  },
   "survival": {
     "title": "Survival Mode",
     "mayRunShort": "Your current plan may run short."
@@ -60,18 +84,35 @@
   "goals": {
     "title": "Savings goals",
     "target": "Target",
+    "new": "New goal",
+    "name": "Goal name",
+    "deadline": "Deadline (optional)",
     "progress": "Progress",
     "pause": "Pause",
-    "contribute": "Add contribution"
+    "resume": "Resume",
+    "contribute": "Add contribution",
+    "amount": "Amount (₦)",
+    "paused": "Paused",
+    "done": "Done",
+    "active": "Active",
+    "suggested": "Suggested per week"
+  },
+  "insights": {
+    "title": "Insights",
+    "inWeek": "Income this week",
+    "outWeek": "Spent this week",
+    "alert": "above the limit you set"
   },
   "settings": {
     "title": "Settings",
     "language": "Language",
     "reminders": "Reminders",
+    "cashReminder": "Evening nudge to record cash spending",
     "export": "Export my data",
     "delete": "Delete my data",
     "resetDemo": "Reset demo",
-    "privacy": "Privacy notice"
+    "privacy": "Privacy notice",
+    "privacyText": "SBMS stores your records on this device (guest mode) or your private account. It never holds money. You can export or delete your data anytime."
   },
   "errors": {
     "invalidAmount": "Enter an amount greater than zero.",

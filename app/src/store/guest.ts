@@ -5,6 +5,13 @@ import { CASH_SOURCE_SEEDS } from '../lib/cash';
 export type TxnType = 'income' | 'expense';
 export type PaymentMethod = 'cash' | 'bank' | 'mobile' | 'other';
 
+export interface Allocation {
+  budgetId?: string;
+  goalId?: string;
+  label: string;
+  amount: number;
+}
+
 export interface Transaction {
   id: string;
   type: TxnType;
@@ -14,6 +21,8 @@ export interface Transaction {
   note?: string;
   paymentMethod: PaymentMethod;
   source?: string;
+  /** Allocate-on-entry split (cash income). Goal legs also bump goal.saved. */
+  allocations?: Allocation[];
 }
 
 export interface Budget {
@@ -32,6 +41,11 @@ export interface SavingsGoal {
   saved: number;
 }
 
+export interface GuestSettings {
+  /** Optional evening nudge to record cash spending. OFF by default. Generic text only. */
+  cashReminder: boolean;
+}
+
 export interface GuestState {
   balance: number;
   protectedEssentials: number;
@@ -41,6 +55,7 @@ export interface GuestState {
   budgets: Budget[];
   goals: SavingsGoal[];
   customSources: string[];
+  settings: GuestSettings;
 }
 
 const KEY = 'sbms-guest';
@@ -57,6 +72,7 @@ export function defaultGuestState(): GuestState {
     budgets: [],
     goals: [],
     customSources: [...CASH_SOURCE_SEEDS],
+    settings: { cashReminder: false },
   };
 }
 
