@@ -29,6 +29,7 @@ export default function Add() {
   const [fType, setFType] = useState('all');
   const [fMethod, setFMethod] = useState('all');
   const [fText, setFText] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
 
   const showAllocate = f.type === 'income' && f.paymentMethod === 'cash';
   const hasSavingsLeg = splits.some((s) => s.target.startsWith('goal:'));
@@ -167,10 +168,10 @@ export default function Add() {
                 </select>
                 <input type="number" min="0" step="0.01" style={{ width: 110 }} value={s.amount}
                   onChange={(e) => setSplits((p) => p.map((r, j) => (j === i ? { ...r, amount: e.target.value } : r)))} />
-                <button onClick={() => setSplits((p) => p.filter((_, j) => j !== i))}>×</button>
+                <button className="small" onClick={() => setSplits((p) => p.filter((_, j) => j !== i))}>×</button>
               </div>
             ))}
-            {targets.length > 0 && <button onClick={() => setSplits((p) => [...p, { target: targets[0].key, amount: '' }])}>{t('add.addSplit')}</button>}
+            {targets.length > 0 && <button className="small" onClick={() => setSplits((p) => [...p, { target: targets[0].key, amount: '' }])}>{t('add.addSplit')}</button>}
             {warnEssentials && <p role="alert"><small>{t('goals.essentialsWarn')}</small></p>}
           </fieldset>
         )}
@@ -181,7 +182,13 @@ export default function Add() {
         </div>
       </div>
 
-      <h2>{t('add.history')}</h2>
+      <h2>
+        <button onClick={() => setShowHistory((v) => !v)} aria-expanded={showHistory}>
+          {t('add.history')} ({state.transactions.length})
+        </button>
+      </h2>
+      {showHistory && (
+      <>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
         <label>{t('add.type')}: <select value={fType} onChange={(e) => setFType(e.target.value)}>
           <option value="all">{t('add.all')}</option>
@@ -213,6 +220,8 @@ export default function Add() {
           </li>
         ))}
       </ul>
+      </>
+      )}
     </section>
   );
 }

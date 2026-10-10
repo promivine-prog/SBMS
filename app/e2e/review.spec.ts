@@ -35,7 +35,8 @@ test('full student journey', async ({ page }) => {
   await page.getByLabel(/Category/).fill('transport');
   await page.getByLabel(/Limit/).fill('3000');
   await page.getByRole('button', { name: 'Add budget' }).click();
-  await expect(page.getByText('Remaining: ₦6,000', { exact: false })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'food' })).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: /Remaining/ })).toBeVisible();
 
   // 3. Goal
   await go(page, 'Goals', 'Savings goals');
@@ -108,6 +109,15 @@ test('full student journey', async ({ page }) => {
   await go(page, 'Home', 'My Money Plan');
   await expect(page.getByText('Cash on hand: ₦2,000')).toBeVisible();
 
+  // 9b. Pidgin renders across the screen (full locale, no English fallback)
+  await go(page, 'Settings', 'Settings');
+  await page.getByLabel(/Language/).selectOption('pcm');
+  await go(page, 'Home', 'My Money Plan');
+  await expect(page.getByText('Cash for hand: ₦2,000')).toBeVisible();
+  await expect(page.getByText('Na track we dey track')).toBeVisible();
+  await go(page, 'Settings', 'Settings');
+  await page.getByLabel(/Language/).selectOption('en');
+
   // 10. Lesson quiz + progress
   await go(page, 'Learn', 'Learn');
   await page.getByRole('button', { name: /Budgeting basics/ }).click();
@@ -128,6 +138,7 @@ test('full student journey', async ({ page }) => {
 
   // 12. History filters hide non-matching records
   await go(page, 'Add', 'Add transaction');
+  await page.getByRole('button', { name: /History/ }).click();
   await page.locator('section > div').nth(1).getByLabel(/^Type/).selectOption('income');
   await expect(page.getByText('Unaccounted', { exact: false }).first()).toBeHidden();
   await page.locator('section > div').nth(1).getByLabel(/^Type/).selectOption('all');

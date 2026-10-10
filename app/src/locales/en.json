@@ -119,11 +119,15 @@
     "flexible": "Flexible",
     "uncertain": "Uncertain",
     "add": "Add budget",
+    "none": "No budgets yet. Add your first one above.",
     "overBy": "over your limit"
   },
   "welcome": {
     "cashNow": "Cash in pocket now (₦, optional)",
-    "optional": "optional"
+    "optional": "optional",
+    "account": "Account — sign up / log in",
+    "continue": "Continue",
+    "back": "Back"
   },
   "learn": {
     "title": "Learn",

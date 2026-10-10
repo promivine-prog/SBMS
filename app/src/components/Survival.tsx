@@ -63,8 +63,8 @@ export default function Survival() {
       </ul>
       <h3>{t('survival.options')}</h3>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button onClick={() => extend(3)}>{t('survival.extend3')}</button>
-        <button onClick={() => extend(7)}>{t('survival.extend7')}</button>
+        <button className="small" onClick={() => extend(3)}>{t('survival.extend3')}</button>
+        <button className="small" onClick={() => extend(7)}>{t('survival.extend7')}</button>
         <Link to="/plan">{t('survival.reviewPlan')}</Link>
         <Link to="/budget">{t('survival.reviewBudgets')}</Link>
         <Link to="/income">{t('survival.updateIncome')}</Link>

@@ -87,7 +87,7 @@ export default function Income() {
       <h1>{t('income.title')}</h1>
       <p><em>{t('income.notBalance')}</em></p>
 
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'end' }}>
         <label>{t('income.source')}: <input value={source} onChange={(e) => setSource(e.target.value)} placeholder="Allowance" /></label>
         <label>{t('income.expectedDate')}: <input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
         <label>{t('income.estimatedAmount')}: <input type="number" min="0" step="0.01" value={est} onChange={(e) => setEst(e.target.value)} /></label>
@@ -96,7 +96,7 @@ export default function Income() {
           <option value="variable">{t('income.variable')}</option>
           <option value="one-off">{t('income.oneOff')}</option>
         </select></label>
-        <button onClick={add}>{t('income.add')}</button>
+        <button className="small" onClick={add}>{t('income.add')}</button>
       </div>
 
       {stale.length > 0 && (
@@ -132,15 +132,15 @@ export default function Income() {
                 <select value={recvMethod} onChange={(e) => setRecvMethod(e.target.value as PaymentMethod)}>
                   {(['cash', 'bank', 'mobile', 'other'] as const).map((m) => <option key={m} value={m}>{t(`add.${m}`)}</option>)}
                 </select>
-                <button onClick={() => recordReceived(x.id)}>{t('add.save')}</button>
-                <button onClick={() => setRecvFor(null)}>{t('add.cancel')}</button>
+                <button className="small" onClick={() => recordReceived(x.id)}>{t('add.save')}</button>
+                <button className="small" onClick={() => setRecvFor(null)}>{t('add.cancel')}</button>
               </div>
             )}
             {editDateFor === x.id && (
               <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
                 <input type="date" value={editDate} onChange={(e) => setEditDate(e.target.value)} />
-                <button onClick={() => saveDate(x.id)}>{t('add.save')}</button>
-                <button onClick={() => setEditDateFor(null)}>{t('add.cancel')}</button>
+                <button className="small" onClick={() => saveDate(x.id)}>{t('add.save')}</button>
+                <button className="small" onClick={() => setEditDateFor(null)}>{t('add.cancel')}</button>
               </div>
             )}
           </li>
