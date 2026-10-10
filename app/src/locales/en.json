@@ -5,7 +5,9 @@
   "estimateNote": "Estimate based on what you entered, not a guarantee.",
   "nav": {
     "home": "Home",
+    "plan": "Plan",
     "add": "Add",
+    "income": "Income",
     "budget": "Budget",
     "goals": "Goals",
     "learn": "Learn",
@@ -24,6 +26,40 @@
     "nextAction": "Add today's expenses or adjust the plan",
     "planMyMoney": "Plan my money",
     "exploreDemo": "Explore demo"
+  },
+  "plan": {
+    "title": "Plan my money",
+    "balance": "Available money (₦)",
+    "protected": "Protected for essentials (₦)",
+    "buffer": "Safety buffer (₦)",
+    "mode": "Planning horizon",
+    "byDays": "Number of days",
+    "byDate": "Next income date",
+    "days": "Days to plan for",
+    "assumptions": "Your assumptions",
+    "updatePrompt": "When life changes, update the numbers above — the guide updates too.",
+    "needHorizon": "That date is not in the future. Pick how many days to plan for instead — we never guess."
+  },
+  "income": {
+    "title": "Expected income",
+    "source": "Source",
+    "expectedDate": "Expected date (optional)",
+    "estimatedAmount": "Estimated amount (optional)",
+    "regularity": "Regularity",
+    "regular": "Regular",
+    "variable": "Variable",
+    "oneOff": "One-off",
+    "status": "Status",
+    "expected": "Expected",
+    "received": "Received",
+    "delayed": "Delayed",
+    "cancelled": "Cancelled",
+    "add": "Add expected income",
+    "staleTitle": "This date has passed — update your plan",
+    "markReceived": "Record received",
+    "actualAmount": "Amount received (₦)",
+    "notBalance": "Expected money is not available balance. It only counts once received.",
+    "none": "No expected income yet."
   },
   "add": {
     "title": "Add transaction",
@@ -79,7 +115,18 @@
   },
   "survival": {
     "title": "Survival Mode",
-    "mayRunShort": "Your current plan may run short."
+    "mayRunShort": "Your current plan may run short.",
+    "whatChanged": "What changed",
+    "options": "Things you can adjust",
+    "extend3": "+3 days",
+    "extend7": "+7 days",
+    "reviewPlan": "Review my plan",
+    "reviewBudgets": "Review flexible spending",
+    "updateIncome": "Update expected income",
+    "shortfallDetail": "The plan no longer covers your protected costs.",
+    "overspendDetail": "over the limit you set.",
+    "staleDetail": "was expected but the date passed. Update it so the plan stays honest.",
+    "allClear": "Nothing needs attention right now."
   },
   "goals": {
     "title": "Savings goals",

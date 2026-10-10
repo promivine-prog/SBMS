@@ -41,6 +41,15 @@ export interface SavingsGoal {
   saved: number;
 }
 
+export interface IncomeExpectation {
+  id: string;
+  source: string;
+  expectedDate?: string; // YYYY-MM-DD
+  estimatedAmount?: number;
+  status: 'expected' | 'received' | 'delayed' | 'cancelled';
+  regularity: 'regular' | 'variable' | 'one-off';
+}
+
 export interface GuestSettings {
   /** Optional evening nudge to record cash spending. OFF by default. Generic text only. */
   cashReminder: boolean;
@@ -55,6 +64,7 @@ export interface GuestState {
   budgets: Budget[];
   goals: SavingsGoal[];
   customSources: string[];
+  incomeExpectations: IncomeExpectation[];
   settings: GuestSettings;
 }
 
@@ -72,6 +82,7 @@ export function defaultGuestState(): GuestState {
     budgets: [],
     goals: [],
     customSources: [...CASH_SOURCE_SEEDS],
+    incomeExpectations: [],
     settings: { cashReminder: false },
   };
 }

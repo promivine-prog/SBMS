@@ -5,6 +5,7 @@ import { budgetAlerts, spentByCategory, totalByType, weekStart } from '../lib/in
 import { calcRunway } from '../lib/runway';
 import { newId } from '../store/guest';
 import { useGuest } from '../store/useGuestState';
+import Survival from '../components/Survival';
 
 function today(): string {
   const d = new Date();
@@ -87,6 +88,8 @@ export default function Home() {
         <li>{t('home.dailyGuide')}: {runway.dailyGuide === null ? t('home.shortfall') : `₦${runway.dailyGuide.toLocaleString()}`}</li>
       </ul>
       <p><em>{t('estimateNote')}</em></p>
+
+      <Survival />
 
       <h2>{t('cash.title')}</h2>
       <Reconcile recorded={cash} />

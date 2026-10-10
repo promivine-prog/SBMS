@@ -6,6 +6,8 @@ import Add from './pages/Add';
 import Budget from './pages/Budget';
 import Goals from './pages/Goals';
 import Home from './pages/Home';
+import Income from './pages/Income';
+import Plan from './pages/Plan';
 import Settings from './pages/Settings';
 
 function Soon({ k }: { k: string }) {
@@ -20,7 +22,9 @@ export default function App() {
       <Router>
         <nav style={{ display: 'flex', gap: 12, flexWrap: 'wrap', padding: 12 }}>
           <NavLink to="/">{t('nav.home')}</NavLink>
+          <NavLink to="/plan">{t('nav.plan')}</NavLink>
           <NavLink to="/add">{t('nav.add')}</NavLink>
+          <NavLink to="/income">{t('nav.income')}</NavLink>
           <NavLink to="/budget">{t('nav.budget')}</NavLink>
           <NavLink to="/goals">{t('nav.goals')}</NavLink>
           <NavLink to="/learn">{t('nav.learn')}</NavLink>
@@ -30,7 +34,9 @@ export default function App() {
         <main style={{ padding: 16, maxWidth: 640, margin: '0 auto' }}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/plan" element={<Plan />} />
             <Route path="/add" element={<Add />} />
+            <Route path="/income" element={<Income />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/goals" element={<Goals />} />
             <Route path="/learn" element={<Soon k="nav.learn" />} />
