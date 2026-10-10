@@ -1,0 +1,80 @@
+{
+  "appName": "SBMS",
+  "tagline": "Know what you have. Plan what matters. Make your money last.",
+  "trackingOnly": "Tracking only — SBMS does not hold or move money.",
+  "estimateNote": "Estimate based on what you entered, not a guarantee.",
+  "nav": {
+    "home": "Home",
+    "add": "Add",
+    "budget": "Budget",
+    "goals": "Goals",
+    "learn": "Learn",
+    "simulator": "Simulator",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "My Money Plan",
+    "available": "Available now",
+    "cashOnHand": "Cash on hand",
+    "protected": "Protected for essentials",
+    "flexible": "Flexible amount in this plan",
+    "period": "Planning period",
+    "dailyGuide": "Daily guide",
+    "shortfall": "Your current plan may run short. Review your assumptions.",
+    "nextAction": "Add today's expenses or adjust the plan",
+    "planMyMoney": "Plan my money",
+    "exploreDemo": "Explore demo"
+  },
+  "add": {
+    "title": "Add transaction",
+    "amount": "Amount (₦)",
+    "type": "Type",
+    "income": "Income",
+    "expense": "Expense",
+    "category": "Category",
+    "date": "Date",
+    "note": "Note (optional)",
+    "paymentMethod": "Payment method",
+    "cash": "Cash",
+    "bank": "Bank",
+    "mobile": "Mobile money",
+    "other": "Other",
+    "source": "Source",
+    "save": "Save"
+  },
+  "cash": {
+    "title": "Cash",
+    "countMyCash": "Count my cash",
+    "counted": "Amount physically in hand",
+    "difference": "Difference",
+    "accept": "Accept adjustment",
+    "dismiss": "Dismiss",
+    "unaccounted": "Unaccounted",
+    "allocate": "Split across categories",
+    "reminderNudge": "Record today's cash spending?"
+  },
+  "survival": {
+    "title": "Survival Mode",
+    "mayRunShort": "Your current plan may run short."
+  },
+  "goals": {
+    "title": "Savings goals",
+    "target": "Target",
+    "progress": "Progress",
+    "pause": "Pause",
+    "contribute": "Add contribution"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "reminders": "Reminders",
+    "export": "Export my data",
+    "delete": "Delete my data",
+    "resetDemo": "Reset demo",
+    "privacy": "Privacy notice"
+  },
+  "errors": {
+    "invalidAmount": "Enter an amount greater than zero.",
+    "allocationMismatch": "Split amounts must add up to the income."
+  }
+}

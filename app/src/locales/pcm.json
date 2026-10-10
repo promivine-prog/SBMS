@@ -1,0 +1,9 @@
+{
+  "_coverage": "stub — English fallback applies until fluent-speaker review. Do not ship as reviewed.",
+  "appName": "SBMS",
+  "tagline": "Sabi wetin you get. Plan wetin matter.",
+  "trackingOnly": "Na track we dey track — SBMS no dey hold or move money.",
+  "nav": { "home": "Home", "add": "Add", "budget": "Budget", "goals": "Goals", "learn": "Learn", "simulator": "Simulator", "settings": "Settings" },
+  "home": { "title": "My Money Plan", "available": "Wetin dey now", "cashOnHand": "Cash for hand", "protected": "Wen you keep for important", "flexible": "Wen remain for plan", "period": "Plan period", "dailyGuide": "Daily guide", "shortfall": "Your plan fit short. Check wetin you put.", "nextAction": "Add today expense", "planMyMoney": "Plan my money", "exploreDemo": "Try demo" },
+  "cash": { "title": "Cash", "countMyCash": "Count my cash", "unaccounted": "Wen we no fit explain" }
+}

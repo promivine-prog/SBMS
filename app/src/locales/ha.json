@@ -1,0 +1,9 @@
+{
+  "_coverage": "stub — English fallback applies until fluent-speaker review. Do not ship as reviewed.",
+  "appName": "SBMS",
+  "tagline": "San abin da kake da shi. Tsara mai muhimmanci.",
+  "trackingOnly": "Bin diddigi kawai — SBMS ba ya riƙe ko motsa kuɗi.",
+  "nav": { "home": "Gida", "add": "Ƙara", "budget": "Kasafi", "goals": "Manufofi", "learn": "Koyo", "simulator": "Gwaji", "settings": "Saituna" },
+  "home": { "title": "Tsarin Kuɗina", "available": "Akwai yanzu", "cashOnHand": "Tsabar kuɗi", "protected": "An kare don mahimmanci", "flexible": "Abin da ya rage", "period": "Lokacin tsari", "dailyGuide": "Jagora na yau da kullum", "shortfall": "Tsarinka na iya gaza. Duba abin da ka shigar.", "nextAction": "Ƙara kashewar yau", "planMyMoney": "Tsara kuɗina", "exploreDemo": "Gwada demo" },
+  "cash": { "title": "Tsabar kuɗi", "countMyCash": "Ƙidaya tsabar kuɗina", "unaccounted": "Ba a bayyana ba" }
+}

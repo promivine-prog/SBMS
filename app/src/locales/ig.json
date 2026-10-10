@@ -1,0 +1,9 @@
+{
+  "_coverage": "stub — English fallback applies until fluent-speaker review. Do not ship as reviewed.",
+  "appName": "SBMS",
+  "tagline": "Mara ihe ị nwere. Hazie ihe dị mkpa.",
+  "trackingOnly": "Nsochi naanị — SBMS anaghị ejide ma ọ bụ bugharịa ego.",
+  "nav": { "home": "Ụlọ", "add": "Tinye", "budget": "Mmefu", "goals": "Ebumnuche", "learn": "Mụta", "simulator": "Nnwale", "settings": "Ntọala" },
+  "home": { "title": "Atụmatụ Ego M", "available": "Dị ugbu a", "cashOnHand": "Ego aka", "protected": "Echekwara maka mkpa", "flexible": "Fọdụrụ maka atụmatụ", "period": "Oge atụmatụ", "dailyGuide": "Ntuziaka kwa ụbọchị", "shortfall": "Atụmatụ gị nwere ike ghara izu. Lelee ihe ị tinyere.", "nextAction": "Tinye mmefu taa", "planMyMoney": "Hazie ego m", "exploreDemo": "Nwale demo" },
+  "cash": { "title": "Ego aka", "countMyCash": "Gụọ ego aka m", "unaccounted": "Akọwaghị" }
+}

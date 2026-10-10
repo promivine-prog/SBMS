@@ -1,0 +1,9 @@
+{
+  "_coverage": "stub — English fallback applies until fluent-speaker review. Do not ship as reviewed.",
+  "appName": "SBMS",
+  "tagline": "Mọ ohun tí o ní. Gbero ohun tí ó ṣe pàtàkì.",
+  "trackingOnly": "Ìtọ́pinpin nìkan — SBMS kò di owó mú tàbí gbé e kiri.",
+  "nav": { "home": "Ilé", "add": "Fi kún", "budget": "Ìnáwó", "goals": "Àfojúsùn", "learn": "Kọ́", "simulator": "Àdánwò", "settings": "Ètò" },
+  "home": { "title": "Ètò Owó Mi", "available": "Tó wà nísinsìnyí", "cashOnHand": "Owó ọwọ́", "protected": "Tó wà fún pàtàkì", "flexible": "Tó kù fún ètò", "period": "Àkókò ètò", "dailyGuide": "Ìtọ́sọ́nà ojoojúmọ́", "shortfall": "Ètò rẹ lè kúrú. Wo àwọn àròsọ rẹ.", "nextAction": "Fi ináwó òní kún", "planMyMoney": "Gbero owó mi", "exploreDemo": "Wo àdánwò" },
+  "cash": { "title": "Owó ọwọ́", "countMyCash": "Kà owó ọwọ́ mi", "unaccounted": "Tí a kò ṣàlàyé" }
+}
