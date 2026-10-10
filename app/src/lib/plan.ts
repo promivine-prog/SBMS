@@ -10,6 +10,12 @@ export interface MiniExpectation {
   status: ExpectStatus;
 }
 
+/** True when essentials + buffer already consume the balance: saving now risks them. */
+export function essentialsConflict(balance: number, protectedEssentials: number, buffer: number): boolean {
+  if (!Number.isFinite(balance) || !Number.isFinite(protectedEssentials) || !Number.isFinite(buffer)) return false;
+  return balance - protectedEssentials - buffer <= 0;
+}
+
 /** Whole days from todayStr to dateStr (negative when past). Both YYYY-MM-DD. */
 export function daysBetween(todayStr: string, dateStr: string): number {
   const ms = new Date(`${dateStr}T00:00:00`).getTime() - new Date(`${todayStr}T00:00:00`).getTime();

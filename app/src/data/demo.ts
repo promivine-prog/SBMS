@@ -8,6 +8,7 @@ export function seedDemo(): GuestState {
   return {
     balance: 12500,
     protectedEssentials: 6000,
+    knownEssentialsDue: 0,
     buffer: 1000,
     planningDays: 9,
     transactions: [

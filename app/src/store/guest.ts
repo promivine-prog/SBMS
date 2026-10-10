@@ -76,6 +76,8 @@ export interface GuestSettings {
 export interface GuestState {
   balance: number;
   protectedEssentials: number;
+  /** Known essential bills still due inside the planning period (Plan §6.1). */
+  knownEssentialsDue: number;
   buffer: number;
   planningDays: number;
   transactions: Transaction[];
@@ -96,6 +98,7 @@ export function defaultGuestState(): GuestState {
   return {
     balance: 0,
     protectedEssentials: 0,
+    knownEssentialsDue: 0,
     buffer: 0,
     planningDays: 7,
     transactions: [],
@@ -118,6 +121,8 @@ export function loadGuest(): GuestState {
     return {
       ...fresh,
       ...parsed,
+      // Newer fields default for older saved states.
+      knownEssentialsDue: parsed.knownEssentialsDue ?? fresh.knownEssentialsDue,
       // Deep-merge nested settings so older saved states gain new flags.
       settings: { ...fresh.settings, ...(parsed.settings ?? {}) },
     };

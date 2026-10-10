@@ -5,7 +5,7 @@
 **Initial market:** Nigerian tertiary students (University, Polytechnic, College of Education)
 **Currency:** NGN (₦)
 **Type:** Mobile-first PWA (manual entry first)
-**Status:** v0.1 — planning / blueprint (no app code yet)
+**Status:** v0.3 — live on Vercel production, Supabase staging+prod, suites green
 
 ## 1. What it is
 
@@ -86,16 +86,22 @@ HTTPS, RLS + cross-user denial tests, min data, no secrets in client, never ask 
 
 Total indicative 8-14 weeks. See `IMPLEMENTATION_PLAN.md` §10-12 for exit criteria + acceptance checklist.
 
-## 9. Repo State (v0.1)
+## 9. Repo State (v0.3)
 
 ```
 SBMS/
-├── README.md (this file)
-├── IMPLEMENTATION_PLAN.md
-└── SBMS_Winning_Product_Blueprint_Complete_With_Bank_Partnerships.docx
+├── README.md (this file — product overview)
+├── PRD.md (requirements)
+├── IMPLEMENTATION_PLAN.md (build plan)
+├── RUNBOOK.md (prod go-live)
+├── supabase/migrations/0001_init.sql
+├── SBMS_Winning_Product_Blueprint_Complete_With_Bank_Partnerships.docx
+└── app/ (Vite React TS PWA: phases 1-5 + review suites)
 ```
 
-No `src/`, no `package.json` yet. Next: confirm Sec.15 decisions (React+Supabase?, guest+account?, pilot schools?, reviewers?, lesson owner?) → Phase 0 + Phase 1 scaffold in parallel.
+Live: `https://sbms-six.vercel.app` (prod DB), Preview → staging.
+Open owner items: reviewers, schools, lesson approval, phone QA; plus your
+decisions on guest→account merge, cash-in-runway semantics, quick-log/reminder scope.
 
 ## 10. Decisions (locked 2026-10-09, solo build - you approve before execution)
 

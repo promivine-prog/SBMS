@@ -154,6 +154,7 @@ export function remapForCloud(
         settings: {
           balance: state.balance,
           protectedEssentials: state.protectedEssentials,
+          knownEssentialsDue: state.knownEssentialsDue,
           buffer: state.buffer,
           planningDays: state.planningDays,
         },
@@ -207,6 +208,7 @@ export function fromCloud(rows: {
   return {
     balance: num(settings.balance, 0),
     protectedEssentials: num(settings.protectedEssentials, 0),
+    knownEssentialsDue: num(settings.knownEssentialsDue, 0),
     buffer: num(settings.buffer, 0),
     planningDays: Math.max(1, Math.floor(num(settings.planningDays, 7))),
     transactions: rows.transactions.map((t) => ({

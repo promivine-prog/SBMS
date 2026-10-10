@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { daysBetween, isStale, planningDaysFrom, survivalTriggers } from './plan';
+import { daysBetween, essentialsConflict, isStale, planningDaysFrom, survivalTriggers } from './plan';
+
+describe('essentialsConflict', () => {
+  it('flags saving when essentials already consume the balance', () => {
+    expect(essentialsConflict(5000, 5000, 0)).toBe(true);
+    expect(essentialsConflict(5000, 4000, 1500)).toBe(true);
+    expect(essentialsConflict(12000, 6000, 1000)).toBe(false);
+  });
+});
 
 describe('daysBetween', () => {
   it('counts forward and past days', () => {

@@ -14,6 +14,7 @@ export default function Plan() {
   const { state, update } = useGuest();
   const [balance, setBalance] = useState(String(state.balance));
   const [prot, setProt] = useState(String(state.protectedEssentials));
+  const [due, setDue] = useState(String(state.knownEssentialsDue));
   const [buffer, setBuffer] = useState(String(state.buffer));
   const [mode, setMode] = useState<'days' | 'date'>('days');
   const [days, setDays] = useState(String(state.planningDays));
@@ -28,7 +29,7 @@ export default function Plan() {
     const r = calcRunway({
       available: Number(balance) || 0,
       protectedEssentials: Number(prot) || 0,
-      knownEssentialsDue: 0,
+      knownEssentialsDue: Number(due) || 0,
       buffer: Number(buffer) || 0,
       planningDays: effDays as number,
     });
@@ -46,6 +47,7 @@ export default function Plan() {
       ...s,
       balance: Number(balance) || 0,
       protectedEssentials: Number(prot) || 0,
+      knownEssentialsDue: Number(due) || 0,
       buffer: Number(buffer) || 0,
       planningDays: d,
     }));
@@ -59,6 +61,7 @@ export default function Plan() {
       <div style={{ display: 'grid', gap: 8, maxWidth: 420 }}>
         <label>{t('plan.balance')}: <input type="number" min="0" step="0.01" value={balance} onChange={(e) => setBalance(e.target.value)} /></label>
         <label>{t('plan.protected')}: <input type="number" min="0" step="0.01" value={prot} onChange={(e) => setProt(e.target.value)} /></label>
+        <label>{t('plan.due')}: <input type="number" min="0" step="0.01" value={due} onChange={(e) => setDue(e.target.value)} /></label>
         <label>{t('plan.buffer')}: <input type="number" min="0" step="0.01" value={buffer} onChange={(e) => setBuffer(e.target.value)} /></label>
         <label>{t('plan.mode')}: <select value={mode} onChange={(e) => setMode(e.target.value as 'days' | 'date')}>
           <option value="days">{t('plan.byDays')}</option>

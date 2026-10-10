@@ -1,8 +1,8 @@
 # SBMS — Product Requirements Document (PRD)
 
 **Product:** Smart Budgeting and Micro-Savings Software (SBMS)
-**Version:** v0.2-draft (Cash feature added 2026-10-10)
-**Status:** Planning — no app code yet
+**Version:** v0.3 (gap fixes 2026-10-10 — filters, due bills, savings warning, setup cash/date)
+**Status:** Live — app on Vercel production + Supabase staging/prod, suites green
 **Market:** Nigerian tertiary students (University, Polytechnic, College of Education)
 **Currency:** NGN (₦)
 **Form factor:** Mobile-first PWA, manual entry first
@@ -81,7 +81,12 @@ Primary: university / polytechnic / college-of-education students managing small
 
 ## 5. Data Model (summary; detail in IMPLEMENTATION_PLAN.md §5)
 
-- `profiles`, `transactions` (+`payment_method`, +`source`), `cash_sources`, `transaction_allocations`, `cash_reconciliations`, `budgets`, `income_expectations`, `savings_goals`, `contributions`, `learning_progress`, `simulator_sessions`.
+- `profiles`, `transactions` (+`payment_method`, +`source`, allocations embedded as
+  `allocations` jsonb — no separate `transaction_allocations` table by design, to keep
+  allocate-on-entry saves atomic without orphan risk), `cash_sources`,
+  `cash_reconciliations` (reserved for future audit sync; reconcile events are
+  recorded today as `Unaccounted` transactions), `budgets`, `income_expectations`,
+  `savings_goals`, `contributions`, `learning_progress`, `simulator_sessions`.
 
 ## 6. Acceptance (pre-pilot gate, cash items)
 
@@ -98,7 +103,10 @@ Primary: university / polytechnic / college-of-education students managing small
 4. Reviewers pending (yo/pcm/ig/ha).
 5. Lessons + simulator: AI drafts, you approve.
 
-## 8. Open Before Build
+## 8. Open Items (owner-side)
 
-- Node 20 LTS install on build machine (missing) before Phase 1 scaffold.
-- Supabase project (staging+prod) creation approval when backend phase starts.
+- Fluent reviewers (yo/pcm/ig/ha) sign-off before pilot.
+- Pilot schools + Phase 0 interviews/survey/audit.
+- Lesson + scenario wording approval.
+- Phone + slow-network QA.
+- (Done: Node toolchain, Supabase staging + prod, Vercel production.)

@@ -52,10 +52,10 @@ Rules:
 
 ## 5. Data Model (MVP)
 - `profiles(user_id PK, language, currency='NGN', settings JSONB)`
-- `transactions(id, user_id FK, type: income|expense, amount NUMERIC>0, category TEXT, date DATE, note TEXT?, payment_method: cash|bank|mobile|other DEFAULT other, source TEXT?)`
+- `transactions(id, user_id FK, type: income|expense, amount NUMERIC>0, category TEXT, date DATE, note TEXT?, payment_method: cash|bank|mobile|other DEFAULT other, source TEXT?, allocations JSONB DEFAULT '[]')` - allocate-on-entry splits embedded (atomic saves, no orphan risk; no separate `transaction_allocations` table by design)
 - `cash_sources(id, user_id FK, name TEXT UNIQUE per user)` - custom quick-reuse sources (e.g. "Mum", "Dad"); seeds: Parent, Allowance, Part-time work, Gift, Other
 - `transaction_allocations(id, transaction_id FK, budget_id FK NULL, goal_id FK NULL, amount NUMERIC>0)` - split of a cash income across budget categories / savings goals (goal legs also write `contributions`)
-- `cash_reconciliations(id, user_id FK, recorded NUMERIC, counted NUMERIC, diff NUMERIC, accepted BOOLEAN, date DATE)` - "Count my cash" checks; accepted diffs post an `Unaccounted` correction transaction
+- `cash_reconciliations(id, user_id FK, recorded NUMERIC, counted NUMERIC, diff NUMERIC, accepted BOOLEAN, date DATE)` - reserved for future audit sync; reconcile events are recorded today as `Unaccounted` transactions
 - `budgets(id, user_id FK, name, essential|flexible|uncertain, limit NUMERIC)`
 - `income_expectations(id, user_id FK, source, expected_date DATE?, estimated_amount NUMERIC?, status: expected|received|delayed|cancelled, regularity: regular|variable|one-off)`
 - `savings_goals(id, user_id FK, title, target NUMERIC, deadline DATE?, status: active|paused|done)`
@@ -217,4 +217,4 @@ Phase 1: polish core. Phase 2: rules insights, reminders, term templates. Phase 
 5. Lessons + simulator: AI drafts 5-6 lessons + 6 scenario cards, you approve on review.
 
 ## 16. Next Action
-Confirm Sec.15 decisions -> kick off Phase 0 interviews + scaffold Phase 1 in parallel.
+Sec.15 locked and built (Phases 1-5 live, suites green). Next: owner-side pilot prep (reviewers, schools, lesson approval, phone QA) + your decisions on guest→account merge, cash-in-runway semantics, quick-log/reminder scope.

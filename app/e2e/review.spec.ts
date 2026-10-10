@@ -41,7 +41,7 @@ test('full student journey', async ({ page }) => {
   // 4. Cash income + allocate-on-entry (5000 food, 3000 goal)
   await page.getByRole('link', { name: 'Add' }).click();
   await page.getByLabel(/^Amount/).fill('8000');
-  await page.getByLabel(/^Type/).selectOption('income');
+  await page.locator('section > div').first().getByLabel(/^Type/).selectOption('income');
   await page.getByRole('button', { name: 'Add split' }).click();
   await page.getByRole('button', { name: 'Add split' }).click();
   const rows = page.locator('fieldset div');
@@ -70,6 +70,7 @@ test('full student journey', async ({ page }) => {
   await expect(page.getByText('Difference: ₦-500')).toBeVisible();
   await page.getByRole('button', { name: 'Accept adjustment' }).click();
   await expect(page.getByText('Cash on hand: ₦6,000')).toBeVisible();
+  await expect(page.getByText('unexplained cash gap recorded this week')).toBeVisible();
   await page.screenshot({ path: 'e2e/shots/03-reconciled.png' });
 
   // 7. Irregular income: past-dated expectation → stale banner → delay
@@ -121,6 +122,10 @@ test('full student journey', async ({ page }) => {
   await page.screenshot({ path: 'e2e/shots/05-simulator.png' });
 
   // 12. Demo reset returns to Welcome
+  await page.getByRole('link', { name: 'Add' }).click();
+  await page.locator('section > div').nth(1).getByLabel(/^Type/).selectOption('income');
+  await expect(page.getByText('Unaccounted', { exact: false }).first()).toBeHidden();
+  await page.locator('section > div').nth(1).getByLabel(/^Type/).selectOption('all');
   await page.getByRole('link', { name: 'Settings' }).click();
   await expect(page.getByText('Demo data (fictional)')).toBeHidden();
   await page.getByRole('button', { name: 'Reset demo' }).click();

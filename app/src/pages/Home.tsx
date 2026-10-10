@@ -66,13 +66,16 @@ export default function Home() {
   const runway = calcRunway({
     available: state.balance,
     protectedEssentials: state.protectedEssentials,
-    knownEssentialsDue: 0,
+    knownEssentialsDue: state.knownEssentialsDue,
     buffer: state.buffer,
     planningDays: state.planningDays,
   });
   const ws = weekStart();
   const mini = state.transactions.map((x) => ({ type: x.type, amount: x.amount, category: x.category, date: x.date }));
   const spent = spentByCategory(mini);
+  const unaccountedWeek = Math.round(mini
+    .filter((x) => x.type === 'expense' && x.category.toLowerCase() === 'unaccounted' && x.date >= ws)
+    .reduce((a, x) => a + x.amount, 0) * 100) / 100;
   const alerts = budgetAlerts(state.budgets, spent).filter((a) => a.over);
 
   return (
@@ -104,6 +107,9 @@ export default function Home() {
           {a.name} is ₦{(a.spent - a.limit).toLocaleString()} {t('insights.alert')} ({t('budget.limit')}: ₦{a.limit.toLocaleString()}).
         </p>
       ))}
+      {unaccountedWeek > 0 && (
+        <p role="note">⚠ ₦{unaccountedWeek.toLocaleString()} {t('insights.unaccountedNote')}</p>
+      )}
       {Object.keys(spent).length === 0 && <p>{t('add.noTxns')}</p>}
     </section>
   );

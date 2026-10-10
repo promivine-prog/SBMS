@@ -22,7 +22,7 @@ export default function Survival() {
   const runway = calcRunway({
     available: state.balance,
     protectedEssentials: state.protectedEssentials,
-    knownEssentialsDue: 0,
+    knownEssentialsDue: state.knownEssentialsDue,
     buffer: state.buffer,
     planningDays: state.planningDays,
   });

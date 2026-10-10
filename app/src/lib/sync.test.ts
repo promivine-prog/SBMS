@@ -15,6 +15,7 @@ describe('isUuid', () => {
 function sampleState() {
   const s = defaultGuestState();
   s.balance = 12500;
+  s.knownEssentialsDue = 2000;
   s.budgets = [{ id: 'b1', name: 'food', kind: 'essential', limit: 6000 }];
   s.goals = [{ id: 'g1', title: 'Textbooks', target: 5000, status: 'active', saved: 1500 }];
   s.transactions = [
@@ -60,6 +61,7 @@ describe('fromCloud', () => {
     const { rows } = remapForCloud(s, {}, gen, '2026-10-10');
     const back = fromCloud({ ...rows, seeds: ['Parent'] });
     expect(back.balance).toBe(12500);
+    expect(back.knownEssentialsDue).toBe(2000);
     expect(back.goals[0].saved).toBe(1500);
     expect(back.transactions).toHaveLength(1);
     expect(back.transactions[0].allocations).toHaveLength(2);

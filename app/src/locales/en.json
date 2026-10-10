@@ -32,6 +32,7 @@
     "title": "Plan my money",
     "balance": "Available money (₦)",
     "protected": "Protected for essentials (₦)",
+    "due": "Essential bills still due (₦)",
     "buffer": "Safety buffer (₦)",
     "mode": "Planning horizon",
     "byDays": "Number of days",
@@ -88,6 +89,9 @@
     "delete": "Delete",
     "cancel": "Cancel",
     "update": "Update",
+    "all": "All",
+    "search": "Search",
+    "searchHint": "category, source, note",
     "noTxns": "No records yet. Add your first one above."
   },
   "cash": {
@@ -113,6 +117,10 @@
     "uncertain": "Uncertain",
     "add": "Add budget",
     "overBy": "over your limit"
+  },
+  "welcome": {
+    "cashNow": "Cash in pocket now (₦, optional)",
+    "optional": "optional"
   },
   "learn": {
     "title": "Learn",
@@ -180,6 +188,7 @@
     "amount": "Amount (₦)",
     "paused": "Paused",
     "done": "Done",
+    "essentialsWarn": "Essentials aren't fully covered — consider pausing or reducing instead of saving now.",
     "active": "Active",
     "suggested": "Suggested per week"
   },
@@ -187,7 +196,8 @@
     "title": "Insights",
     "inWeek": "Income this week",
     "outWeek": "Spent this week",
-    "alert": "above the limit you set"
+    "alert": "above the limit you set",
+    "unaccountedNote": "unexplained cash gap recorded this week — count your cash to stay honest"
   },
   "settings": {
     "title": "Settings",

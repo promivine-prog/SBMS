@@ -2,8 +2,15 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { seedDemo } from '../data/demo';
 import { LANGS, setLang, type LangCode } from '../i18n';
-import { saveGuest } from '../store/guest';
+import { daysBetween } from '../lib/plan';
+import { roundKobo } from '../lib/runway';
+import { newId, saveGuest } from '../store/guest';
 import { useGuest } from '../store/useGuestState';
+
+function today(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${`${d.getMonth() + 1}`.padStart(2, '0')}-${`${d.getDate()}`.padStart(2, '0')}`;
+}
 
 /** First-run onboarding: one-sentence promise → language → plan or demo. */
 export default function Welcome() {
@@ -13,15 +20,29 @@ export default function Welcome() {
   const [balance, setBalance] = useState('');
   const [prot, setProt] = useState('');
   const [days, setDays] = useState('7');
+  const [cashNow, setCashNow] = useState('');
+  const [nextDate, setNextDate] = useState('');
 
   function startFresh() {
-    const d = Math.max(1, Math.floor(Number(days) || 7));
+    const t0 = today();
+    const cash = roundKobo(Number(cashNow) || 0);
+    let d = Math.max(1, Math.floor(Number(days) || 7));
+    const txns = cash > 0
+      ? [{ id: newId(), type: 'income' as const, amount: cash, category: 'Income', date: t0, paymentMethod: 'cash' as const, source: 'Opening cash' }]
+      : [];
+    let expectations: { id: string; source: string; expectedDate?: string; status: 'expected'; regularity: 'one-off' }[] = [];
+    if (nextDate && daysBetween(t0, nextDate) >= 1) {
+      d = daysBetween(t0, nextDate);
+      expectations = [{ id: newId(), source: 'Next income', expectedDate: nextDate, status: 'expected', regularity: 'one-off' }];
+    }
     window.history.replaceState(null, '', '/');
     update((s) => ({
       ...s,
       balance: Number(balance) || 0,
       protectedEssentials: Number(prot) || 0,
       planningDays: d,
+      transactions: txns,
+      incomeExpectations: expectations,
       settings: { ...s.settings, onboarded: true, demoMode: false },
     }));
   }
@@ -62,6 +83,8 @@ export default function Welcome() {
         <label>{t('plan.balance')}: <input type="number" min="0" step="0.01" value={balance} onChange={(e) => setBalance(e.target.value)} /></label>
         <label>{t('plan.protected')}: <input type="number" min="0" step="0.01" value={prot} onChange={(e) => setProt(e.target.value)} /></label>
         <label>{t('plan.days')}: <input type="number" min="1" step="1" value={days} onChange={(e) => setDays(e.target.value)} /></label>
+        <label>{t('welcome.cashNow')}: <input type="number" min="0" step="0.01" value={cashNow} onChange={(e) => setCashNow(e.target.value)} /></label>
+        <label>{t('plan.byDate')} ({t('welcome.optional')}): <input type="date" value={nextDate} onChange={(e) => setNextDate(e.target.value)} /></label>
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={startFresh}>{t('add.save')}</button>
           <button onClick={exploreDemo}>{t('home.exploreDemo')}</button>

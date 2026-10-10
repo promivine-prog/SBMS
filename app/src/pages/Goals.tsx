@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { essentialsConflict } from '../lib/plan';
 import { roundKobo } from '../lib/runway';
 import { newId } from '../store/guest';
 import { useGuest } from '../store/useGuestState';
@@ -48,6 +49,9 @@ export default function Goals() {
     <section>
       <h1>{t('goals.title')}</h1>
       <p>{t('trackingOnly')}</p>
+      {essentialsConflict(state.balance, state.protectedEssentials, state.buffer) && (
+        <p role="alert">{t('goals.essentialsWarn')}</p>
+      )}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <label>{t('goals.name')}: <input value={title} onChange={(e) => setTitle(e.target.value)} /></label>
         <label>{t('goals.target')}: <input type="number" min="0" step="0.01" value={target} onChange={(e) => setTarget(e.target.value)} /></label>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { addCustomSource, validateAllocation } from '../lib/cash';
+import { essentialsConflict } from '../lib/plan';
 import { roundKobo } from '../lib/runway';
 import { DEFAULT_CATEGORIES, newId, type Allocation, type PaymentMethod, type Transaction, type TxnType } from '../store/guest';
 import { useGuest } from '../store/useGuestState';
@@ -25,8 +26,14 @@ export default function Add() {
   const [splits, setSplits] = useState<SplitRow[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [err, setErr] = useState('');
+  const [fType, setFType] = useState('all');
+  const [fMethod, setFMethod] = useState('all');
+  const [fText, setFText] = useState('');
 
   const showAllocate = f.type === 'income' && f.paymentMethod === 'cash';
+  const hasSavingsLeg = splits.some((s) => s.target.startsWith('goal:'));
+  const warnEssentials = (showAllocate && hasSavingsLeg) &&
+    essentialsConflict(state.balance, state.protectedEssentials, state.buffer);
   const targets = [
     ...state.budgets.map((b) => ({ key: `budget:${b.id}`, label: `${b.name} (budget)` })),
     ...state.goals.filter((g) => g.status === 'active').map((g) => ({ key: `goal:${g.id}`, label: `${g.title} (goal)` })),
@@ -164,6 +171,7 @@ export default function Add() {
               </div>
             ))}
             {targets.length > 0 && <button onClick={() => setSplits((p) => [...p, { target: targets[0].key, amount: '' }])}>{t('add.addSplit')}</button>}
+            {warnEssentials && <p role="alert"><small>{t('goals.essentialsWarn')}</small></p>}
           </fieldset>
         )}
 
@@ -174,9 +182,29 @@ export default function Add() {
       </div>
 
       <h2>{t('add.history')}</h2>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+        <label>{t('add.type')}: <select value={fType} onChange={(e) => setFType(e.target.value)}>
+          <option value="all">{t('add.all')}</option>
+          <option value="expense">{t('add.expense')}</option>
+          <option value="income">{t('add.income')}</option>
+        </select></label>
+        <label>{t('add.paymentMethod')}: <select value={fMethod} onChange={(e) => setFMethod(e.target.value)}>
+          <option value="all">{t('add.all')}</option>
+          {(['cash', 'bank', 'mobile', 'other'] as const).map((m) => <option key={m} value={m}>{t(`add.${m}`)}</option>)}
+        </select></label>
+        <label>{t('add.search')}: <input value={fText} onChange={(e) => setFText(e.target.value)} placeholder={t('add.searchHint')} /></label>
+      </div>
       {state.transactions.length === 0 && <p>{t('add.noTxns')}</p>}
       <ul>
-        {[...state.transactions].reverse().map((x) => (
+        {[...state.transactions]
+          .filter((x) => fType === 'all' || x.type === fType)
+          .filter((x) => fMethod === 'all' || x.paymentMethod === fMethod)
+          .filter((x) => {
+            const q = fText.trim().toLowerCase();
+            if (!q) return true;
+            return [x.category, x.source ?? '', x.note ?? ''].some((s) => s.toLowerCase().includes(q));
+          })
+          .reverse().map((x) => (
           <li key={x.id}>
             {x.date} · {x.type} · ₦{x.amount.toLocaleString()} · {x.category} · {x.paymentMethod}{x.source ? ` · ${x.source}` : ''}{x.note ? ` · ${x.note}` : ''}
             {x.allocations && x.allocations.length > 0 && <> · [{x.allocations.map((a) => `${a.label}: ₦${a.amount.toLocaleString()}`).join('; ')}]</>}
