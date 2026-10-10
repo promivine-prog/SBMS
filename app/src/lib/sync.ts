@@ -14,7 +14,7 @@ export function isUuid(id: string): boolean {
 export interface CloudTransaction {
   id: string;
   type: 'income' | 'expense';
-  amount: number;
+  amount: number | string;
   category: string;
   date: string;
   note: string | null;
@@ -27,13 +27,13 @@ export interface CloudBudget {
   id: string;
   name: string;
   kind: 'essential' | 'flexible' | 'uncertain';
-  limit: number;
+  limit: number | string;
 }
 
 export interface CloudGoal {
   id: string;
   title: string;
-  target: number;
+  target: number | string;
   deadline: string | null;
   status: 'active' | 'paused' | 'done';
 }
@@ -41,7 +41,7 @@ export interface CloudGoal {
 export interface CloudContribution {
   id?: string;
   goal_id: string;
-  amount: number;
+  amount: number | string;
   date?: string;
 }
 
@@ -49,7 +49,7 @@ export interface CloudExpectation {
   id: string;
   source: string;
   expected_date: string | null;
-  estimated_amount: number | null;
+  estimated_amount: number | string | null;
   status: 'expected' | 'received' | 'delayed' | 'cancelled';
   regularity: 'regular' | 'variable' | 'one-off';
 }
@@ -202,12 +202,16 @@ export function fromCloud(rows: {
   sessions: CloudSession[];
   seeds: string[];
 }): GuestState {
+  const toNum = (v: unknown): number | null =>
+    typeof v === 'number' && Number.isFinite(v) ? v : typeof v === 'string' && v.trim() !== '' && Number.isFinite(Number(v)) ? Number(v) : null;
   const savedByGoal = new Map<string, number>();
   for (const c of rows.contributions) {
-    savedByGoal.set(c.goal_id, Math.round(((savedByGoal.get(c.goal_id) ?? 0) + c.amount) * 100) / 100);
+    const a = toNum(c.amount);
+    if (a === null) continue;
+    savedByGoal.set(c.goal_id, Math.round(((savedByGoal.get(c.goal_id) ?? 0) + a) * 100) / 100);
   }
   const settings = rows.profile?.settings ?? {};
-  const num = (v: unknown, fb: number) => (typeof v === 'number' && Number.isFinite(v) ? v : fb);
+  const num = (v: unknown, fb: number) => (typeof v === 'number' && Number.isFinite(v) ? v : typeof v === 'string' && v.trim() !== '' && Number.isFinite(Number(v)) ? Number(v) : fb);
   return {
     balance: num(settings.balance, 0),
     protectedEssentials: num(settings.protectedEssentials, 0),
@@ -217,19 +221,19 @@ export function fromCloud(rows: {
     transactions: rows.transactions.map((t) => ({
       id: t.id,
       type: t.type,
-      amount: t.amount,
+      amount: num(t.amount, 0),
       category: t.category,
       date: t.date,
       note: t.note ?? undefined,
       paymentMethod: (t.payment_method ?? 'other') as GuestState['transactions'][number]['paymentMethod'],
       source: t.source ?? undefined,
-      allocations: t.allocations ?? [],
+      allocations: (t.allocations ?? []).map((a) => ({ ...a, amount: num(a.amount, 0) })),
     })),
-    budgets: rows.budgets.map((b) => ({ id: b.id, name: b.name, kind: b.kind, limit: b.limit })),
+    budgets: rows.budgets.map((b) => ({ id: b.id, name: b.name, kind: b.kind, limit: num(b.limit, 0) })),
     goals: rows.goals.map((g) => ({
       id: g.id,
       title: g.title,
-      target: g.target,
+      target: num(g.target, 0),
       deadline: g.deadline ?? undefined,
       status: g.status,
       saved: savedByGoal.get(g.id) ?? 0,
@@ -239,16 +243,16 @@ export function fromCloud(rows: {
       id: e.id,
       source: e.source,
       expectedDate: e.expected_date ?? undefined,
-      estimatedAmount: e.estimated_amount ?? undefined,
+      estimatedAmount: toNum(e.estimated_amount) ?? undefined,
       status: e.status,
       regularity: e.regularity,
     })),
-    learning: rows.learning.map((p) => ({ lessonId: p.lesson_id, quizScore: p.quiz_score, at: p.at })),
+    learning: rows.learning.map((p) => ({ lessonId: p.lesson_id, quizScore: typeof p.quiz_score === 'number' ? p.quiz_score : Number(p.quiz_score) || 0, at: p.at })),
     simSessions: rows.sessions.map((s) => ({
       id: s.id,
       scenarioId: s.scenario_id,
       choices: s.choices,
-      finalBalance: s.outcome?.finalBalance ?? 0,
+      finalBalance: typeof s.outcome?.finalBalance === 'number' ? s.outcome.finalBalance : 0,
       at: s.at,
     })),
     settings: { cashReminder: false, onboarded: true, demoMode: false, includeCash: rows.profile?.settings?.includeCash === true },

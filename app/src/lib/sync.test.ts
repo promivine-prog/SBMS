@@ -56,8 +56,7 @@ describe('remapForCloud', () => {
 });
 
 describe('fromCloud', () => {
-  it('round-trips totals and settings', () => {
-    const s = sampleState();
+  it('round-trips totals and settings', () => {    const s = sampleState();
     const { rows } = remapForCloud(s, {}, gen, '2026-10-10');
     const back = fromCloud({ ...rows, seeds: ['Parent'] });
     expect(back.balance).toBe(12500);
@@ -66,5 +65,23 @@ describe('fromCloud', () => {
     expect(back.transactions).toHaveLength(1);
     expect(back.transactions[0].allocations).toHaveLength(2);
     expect(back.settings.onboarded).toBe(true);
+  });
+
+  it('coerces PostgREST NUMERIC strings back to numbers', () => {
+    const s = sampleState();
+    const { rows } = remapForCloud(s, {}, gen, '2026-10-10');
+    const stringy = {
+      ...rows,
+      transactions: rows.transactions.map((t) => ({ ...t, amount: String(t.amount) })),
+      budgets: rows.budgets.map((b) => ({ ...b, limit: String(b.limit) })),
+      goals: rows.goals.map((g) => ({ ...g, target: String(g.target) })),
+      contributions: rows.contributions.map((c) => ({ ...c, amount: String(c.amount) })),
+    };
+    const back = fromCloud({ ...stringy, seeds: ['Parent'] });
+    expect(back.balance).toBe(12500);
+    expect(back.goals[0].saved).toBe(1500);
+    expect(back.goals[0].target).toBe(5000);
+    expect(back.transactions[0].amount).toBe(8000);
+    expect(typeof back.transactions[0].amount).toBe('number');
   });
 });

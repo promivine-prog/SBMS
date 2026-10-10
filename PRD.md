@@ -40,7 +40,7 @@ Primary: university / polytechnic / college-of-education students managing small
 ### 4.1 Onboarding & accounts (Hybrid)
 - Language select (en/yo/pcm/ig/ha), NGN default, starting balance, optional next-income date.
 - Plan my money / Explore demo.
-- Guest/Demo: local-only (`localStorage`), never writes to Supabase, Reset demo button. Account (optional): Supabase Auth, cloud sync. Merge rule: upload merges local records into the cloud copy by stable id (nothing server-side is deleted except scoped refreshes of opening contributions and the source-name list); download replaces local records (explicit, disclosed).
+- Guest/Demo: local-only (`localStorage`), never writes to Supabase, Reset demo button. Account (optional): Supabase Auth, cloud sync. Merge rule: upload merges local records into the cloud copy by stable id (nothing server-side is deleted except scoped refreshes of opening contributions and the source-name list); download replaces local records only after an inline two-tap confirm (explicit, disclosed).
 
 ### 4.2 Income / expense log
 - Manual add/edit/delete: amount (>0, kobo rounding), type (income|expense), category, date, note (optional), payment method (cash|bank|mobile|other), source (optional).

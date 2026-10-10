@@ -57,7 +57,15 @@ export async function signUp(email: string, password: string): Promise<string | 
   const sb = getSupabase();
   if (!sb) return 'Cloud sync is not configured on this build.';
   const { data, error } = await sb.auth.signUp({ email, password });
-  if (error) return error.message;
+  if (error) {
+    if (/already registered|already exists/i.test(error.message)) {
+      return 'That email already has an account. Log in instead.';
+    }
+    return error.message;
+  }
+  // With email confirmation ON there is no session yet: never write as anon
+  // (RLS would reject it). The profile row is created on first upload instead.
+  if (!data.session) return 'Account created. Confirm your email, then log in.';
   if (data.user) {
     const { error: pErr } = await sb.from('profiles').upsert(
       { user_id: data.user.id, language: 'en', currency: 'NGN', settings: {} },
@@ -129,9 +137,13 @@ export async function uploadAll(state: GuestState): Promise<{ counts: Record<str
     if (cIns) throw new Error(`contributions: ${cIns.message}`);
   }
   counts['contributions'] = rows.contributions.length;
-  for (const s of withUser(rows.sources)) {
-    const { error: sErr } = await db.from('cash_sources').upsert(s, { onConflict: 'cash_sources_user_name' });
-    if (sErr) throw new Error(`cash_sources: ${sErr.message}`);
+  // Name lists rebuild cleanly: scoped refresh (the unique index has no
+  // constraint name addressable by onConflict, so upsert can't target it).
+  const { error: sDel } = await db.from('cash_sources').delete().eq('user_id', uid);
+  if (sDel) throw new Error(`cash_sources: ${sDel.message}`);
+  if (rows.sources.length > 0) {
+    const { error: sIns } = await db.from('cash_sources').insert(withUser(rows.sources));
+    if (sIns) throw new Error(`cash_sources: ${sIns.message}`);
   }
   counts['cash_sources'] = rows.sources.length;
   return { counts };

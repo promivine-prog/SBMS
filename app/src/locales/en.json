@@ -156,6 +156,8 @@
     "loggedInAs": "Logged in as",
     "upload": "Upload my records",
     "download": "Download cloud copy",
+    "downloadConfirm": "Download replaces the records on this device. Tap again to confirm.",
+    "downloadConfirmTap": "Tap again to confirm",
     "uploaded": "Uploaded records",
     "downloaded": "Cloud copy applied. Local records were replaced.",
     "done": "Done.",

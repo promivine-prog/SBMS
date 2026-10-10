@@ -12,6 +12,17 @@ export default function Account() {
   const [who, setWho] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
+  const [armDownload, setArmDownload] = useState(false);
+
+  useEffect(() => {
+    void currentEmail().then(setWho);
+  }, []);
+
+  useEffect(() => {
+    if (!armDownload) return;
+    const t = setTimeout(() => setArmDownload(false), 10000);
+    return () => clearTimeout(t);
+  }, [armDownload]);
 
   useEffect(() => {
     void currentEmail().then(setWho);
@@ -48,7 +59,12 @@ export default function Account() {
   }
 
   async function download() {
-    setMsg('');
+    if (!armDownload) {
+      setArmDownload(true);
+      setMsg(t('account.downloadConfirm'));
+      return;
+    }
+    setArmDownload(false);
     setBusy(true);
     try {
       const fresh = await downloadAll();
@@ -70,7 +86,7 @@ export default function Account() {
           <p><small>{t('account.uploadNote')}</small></p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <button disabled={busy} onClick={upload}>{t('account.upload')}</button>
-            <button disabled={busy} onClick={download}>{t('account.download')}</button>
+            <button disabled={busy} onClick={download}>{armDownload ? t('account.downloadConfirmTap') : t('account.download')}</button>
             <button disabled={busy} onClick={() => run(async () => { await signOut(); return null; })}>{t('account.logout')}</button>
           </div>
           <p><small>{t('account.downloadNote')}</small></p>
@@ -85,7 +101,7 @@ export default function Account() {
           </div>
         </div>
       )}
-      {msg && <p role="status">{msg}</p>}
+      {msg && <p role="status" style={{ minHeight: 24 }}>{msg}</p>}
     </section>
   );
 }

@@ -13,6 +13,7 @@ test('staging auth + upload + download round-trip', async ({ page }) => {
   await page.getByRole('button', { name: 'Explore demo' }).click();
   await page.goto('/'); // Welcome swaps to Router at the current URL; land on Home
   await expect(page.getByRole('heading', { name: 'My Money Plan' })).toBeVisible();
+  await expect(page.getByText('Cash on hand: ₦5,700')).toBeVisible(); // seed must hold before cloud steps
 
   await page.getByRole('link', { name: 'Account' }).click();
   const email = process.env.SMOKE_EMAIL ?? `sbms.smoke.${Date.now()}@gmail.com`;
@@ -28,11 +29,15 @@ test('staging auth + upload + download round-trip', async ({ page }) => {
   await expect(page.getByText('Logged in as')).toBeVisible({ timeout: 15000 });
 
   await page.getByRole('button', { name: 'Upload my records' }).click();
-  await expect(page.getByText(/Uploaded records: \d+/)).toBeVisible({ timeout: 20000 });
+  // Demo seed uploads exactly 15 rows; anything else means a mis-tap or regression.
+  await expect(page.getByText('Uploaded records: 15')).toBeVisible({ timeout: 20000 });
 
   await page.getByRole('button', { name: 'Download cloud copy' }).click();
+  await expect(page.getByRole('button', { name: 'Tap again to confirm' })).toBeVisible();
+  await page.getByRole('button', { name: 'Tap again to confirm' }).click();
   await expect(page.getByText('Cloud copy applied')).toBeVisible({ timeout: 20000 });
   await page.getByRole('link', { name: 'Home' }).click();
+  await expect(page.getByRole('heading', { name: 'My Money Plan' })).toBeVisible();
   await expect(page.getByText('Cash on hand: ₦5,700')).toBeVisible();
 
   await page.getByRole('link', { name: 'Account' }).click();
