@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getSupabase } from '../lib/supabase';
 import { cloudConfigured, currentEmail, downloadAll, signIn, signOut, signUp, uploadAll } from '../store/cloud';
 import { useGuest } from '../store/useGuestState';
 
@@ -16,6 +17,14 @@ export default function Account() {
 
   useEffect(() => {
     void currentEmail().then(setWho);
+    const sb = getSupabase();
+    if (!sb) return;
+    const { data: sub } = sb.auth.onAuthStateChange((_event, session) => {
+      setWho(session?.user.email ?? null);
+    });
+    return () => {
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -23,10 +32,6 @@ export default function Account() {
     const t = setTimeout(() => setArmDownload(false), 10000);
     return () => clearTimeout(t);
   }, [armDownload]);
-
-  useEffect(() => {
-    void currentEmail().then(setWho);
-  }, []);
 
   if (!cloudConfigured()) return <p>{t('account.notConfigured')}</p>;
 

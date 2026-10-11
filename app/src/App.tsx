@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBadge from './components/OfflineBadge';
+import { getSupabase } from './lib/supabase';
 import { GuestProvider, useGuest } from './store/useGuestState';
 import './i18n';
 import Account from './pages/Account';
@@ -19,6 +21,10 @@ import Welcome from './pages/Welcome';
 function Shell() {
   const { t } = useTranslation();
   const { state } = useGuest();
+  useEffect(() => {
+    // Confirm-link landings carry ?code=: creating the client exchanges it.
+    if (window.location.search.includes('code=')) getSupabase();
+  }, []);
   if (!state.settings.onboarded) return <Welcome />;
   return (
     <Router>
