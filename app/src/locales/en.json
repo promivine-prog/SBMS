@@ -127,7 +127,8 @@
     "optional": "optional",
     "account": "Account — sign up / log in",
     "continue": "Continue",
-    "back": "Back"
+    "back": "Back",
+    "skipForNow": "Skip for now →"
   },
   "learn": {
     "title": "Learn",

@@ -1,11 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getSupabase } from '../lib/supabase';
 import { cloudConfigured, currentEmail, downloadAll, signIn, signOut, signUp, uploadAll } from '../store/cloud';
 import { useGuest } from '../store/useGuestState';
 
+function usePrevious<T>(v: T): T | undefined {
+  const ref = useRef<T | undefined>(undefined);
+  useEffect(() => {
+    ref.current = v;
+  }, [v]);
+  return ref.current;
+}
+
 /** Optional cloud account. Guest mode keeps working without it. */
-export default function Account() {
+export default function Account({ onAuthed }: { onAuthed?: () => void }) {
   const { t } = useTranslation();
   const { state, update } = useGuest();
   const [email, setEmail] = useState('');
@@ -26,6 +34,12 @@ export default function Account() {
       sub.subscription.unsubscribe();
     };
   }, []);
+
+  const authed = who !== null;
+  const prevAuthed = usePrevious(authed);
+  useEffect(() => {
+    if (authed && !prevAuthed) onAuthed?.();
+  }, [authed, prevAuthed, onAuthed]);
 
   useEffect(() => {
     if (!armDownload) return;

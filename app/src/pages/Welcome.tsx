@@ -60,11 +60,10 @@ export default function Welcome() {
   if (mode === 'account') {
     return (
       <main className="welcome">
-        <Account />
-        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-          <button onClick={() => setMode('setup')}>{t('welcome.continue')}</button>
-          <button onClick={() => setMode('menu')}>{t('welcome.back')}</button>
-        </div>
+        <Account onAuthed={() => setMode('setup')} />
+        <p>
+          <button className="linklike" onClick={() => setMode('setup')}>{t('welcome.skipForNow')}</button>
+        </p>
       </main>
     );
   }

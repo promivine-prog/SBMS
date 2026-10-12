@@ -322,6 +322,22 @@ button.small {
   font-size: 0.85rem;
 }
 
+/* Quiet text-link buttons (escape hatches, not primary actions) */
+button.linklike {
+  all: unset;
+  cursor: pointer;
+  color: var(--green-700);
+  text-decoration: underline;
+  font: inherit;
+  min-height: 0;
+  padding: 8px 0;
+}
+
+button.linklike:focus-visible {
+  outline: 3px solid rgba(18, 146, 74, 0.4);
+  outline-offset: 1px;
+}
+
 /* Tappable row summaries (income expectations, more to come) */
 button.row-toggle {
   all: unset;
