@@ -58,25 +58,37 @@ export default function Goals() {
         <label>{t('goals.deadline')}: <input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} /></label>
         <button onClick={add}>{t('goals.new')}</button>
       </div>
-      <ul>
+      <ul className="goals">
         {state.goals.map((g) => {
           const wl = weeksLeft(g.deadline);
           const suggested = wl === null ? null : roundKobo(Math.max(0, (g.target - g.saved) / wl));
           const pct = Math.min(100, Math.round((g.saved / g.target) * 100));
           return (
-            <li key={g.id}>
-              <strong>{g.title}</strong> [{t(`goals.${g.status}`)}] — ₦{g.saved.toLocaleString()} / ₦{g.target.toLocaleString()} ({pct}%)
-              {suggested !== null && <> · {t('goals.suggested')}: ₦{suggested.toLocaleString()}</>}
+            <li key={g.id} className="goal">
+              <div className="goal-head">
+                <strong>{g.title}</strong>
+                <span className={`chip ${g.status}`}>{t(`goals.${g.status}`)}</span>
+              </div>
+              <div className="progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={g.title}>
+                <div className="progress-fill" style={{ width: `${pct}%` }} />
+              </div>
+              <div className="goal-nums">
+                <span>₦{g.saved.toLocaleString()} / ₦{g.target.toLocaleString()}</span>
+                <span>{pct}%</span>
+              </div>
+              {suggested !== null && <p><small>{t('goals.suggested')}: ₦{suggested.toLocaleString()}</small></p>}
               {g.status === 'active' && (
-                <>
-                  {' '}<input type="number" min="0" step="0.01" style={{ width: 110 }} placeholder={t('goals.amount')}
+                <div className="goal-actions">
+                  <input type="number" min="0" step="0.01" style={{ width: 110 }} placeholder={t('goals.amount')}
                     value={amounts[g.id] ?? ''} onChange={(e) => setAmounts((p) => ({ ...p, [g.id]: e.target.value }))} />
-                  {' '}<button onClick={() => contribute(g.id)}>{t('goals.contribute')}</button>
-                  {' '}<button onClick={() => update((s) => ({ ...s, goals: s.goals.map((x) => (x.id === g.id ? { ...x, status: 'paused' as const } : x)) }))}>{t('goals.pause')}</button>
-                </>
+                  <button className="small" onClick={() => contribute(g.id)}>{t('goals.contribute')}</button>
+                  <button className="small" onClick={() => update((s) => ({ ...s, goals: s.goals.map((x) => (x.id === g.id ? { ...x, status: 'paused' as const } : x)) }))}>{t('goals.pause')}</button>
+                </div>
               )}
               {g.status === 'paused' && (
-                <button onClick={() => update((s) => ({ ...s, goals: s.goals.map((x) => (x.id === g.id ? { ...x, status: 'active' as const } : x)) }))}>{t('goals.resume')}</button>
+                <div className="goal-actions">
+                  <button className="small" onClick={() => update((s) => ({ ...s, goals: s.goals.map((x) => (x.id === g.id ? { ...x, status: 'active' as const } : x)) }))}>{t('goals.resume')}</button>
+                </div>
               )}
             </li>
           );
