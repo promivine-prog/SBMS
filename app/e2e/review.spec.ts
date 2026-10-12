@@ -106,8 +106,8 @@ test('full student journey', async ({ page }) => {
   await go(page, 'Settings', 'Settings');
   await page.getByLabel(/Language/).selectOption('yo');
   await expect(page.getByRole('link', { name: 'Ilé' })).toBeVisible();
-  await page.getByRole('link', { name: 'Ètò' }).click();
-  await page.getByLabel(/Language/).selectOption('en');
+  await page.getByRole('link', { name: 'Ètò-ṣíṣe', exact: true }).click();
+  await page.getByLabel(/Language|Èdè|Asụsụ|Harshe/).selectOption('en');
   await go(page, 'Home', 'My Money Plan');
   await expect(page.getByText('Cash on hand: ₦2,000')).toBeVisible();
 
@@ -117,8 +117,23 @@ test('full student journey', async ({ page }) => {
   await go(page, 'Home', 'My Money Plan');
   await expect(page.getByText('Cash for hand: ₦2,000')).toBeVisible();
   await expect(page.getByText('Na track we dey track')).toBeVisible();
-  await go(page, 'Settings', 'Settings');
-  await page.getByLabel(/Language/).selectOption('en');
+
+  // 9c. Every language renders its own labels (mechanism identical, content per locale)
+  const langs = [
+    { code: 'yo', home: 'Ilé', homeTitle: 'Ètò Owó Mi', settings: 'Ètò-ṣíṣe', cash: 'Owó ọwọ́: ₦2,000' },
+    { code: 'ig', home: 'Ụlọ', homeTitle: 'Atụmatụ Ego M', settings: 'Ntọala', cash: 'Ego aka: ₦2,000' },
+    { code: 'ha', home: 'Gida', homeTitle: 'Tsarin Kuɗina', settings: 'Saituna', cash: 'Tsabar kuɗi: ₦2,000' },
+  ];
+  let curSettings = 'Settings';
+  for (const l of langs) {
+    await go(page, curSettings, curSettings);
+    await page.getByLabel(/Language|Èdè|Asụsụ|Harshe/).selectOption(l.code);
+    await go(page, l.home, l.homeTitle);
+    await expect(page.getByText(l.cash, { exact: true })).toBeVisible();
+    curSettings = l.settings;
+  }
+  await go(page, curSettings, curSettings);
+  await page.getByLabel(/Language|Èdè|Asụsụ|Harshe/).selectOption('en');
 
   // 10. Lesson quiz + progress
   await go(page, 'Learn', 'Learn');
