@@ -87,7 +87,7 @@ function QuickCash() {
       <label>{t('add.amount')}: <input type="number" min="0" step="0.01" style={{ width: 120 }} value={amount} onChange={(e) => setAmount(e.target.value)} /></label>
       <label>{t('add.category')}: <input list="sbms-quickcats" style={{ width: 130 }} value={category} onChange={(e) => setCategory(e.target.value)} />
         <datalist id="sbms-quickcats">{DEFAULT_CATEGORIES.map((c) => <option key={c} value={c} />)}</datalist></label>
-      <button onClick={save}>{t('cash.quickSave')}</button>
+      <button className="small" onClick={save}>{t('cash.quickSave')}</button>
       {err && <span role="alert">{err}</span>}
     </div>
   );
